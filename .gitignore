@@ -1,0 +1,55 @@
+# Environments & Secrets
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+*.env
+!/.env.example
+
+# Credentials, Keys, & Certificates
+*.pem
+*.key
+*.p12
+*.pfx
+*.pkcs12
+*service_account*.json
+credentials*.json
+client_secret*.json
+secrets*.json
+id_rsa*
+*.crt
+*.cert
+
+# Database & SQLite files
+*.db
+*.sqlite
+*.sqlite3
+data/*.db
+
+# Python bytecode & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+env/
+venv/
+ENV/
+build/
+dist/
+*.egg-info/
+
+# Logs & temporary runtime files
+*.log
+logs/
+*.tmp
+*.bak
+
+# IDE & OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

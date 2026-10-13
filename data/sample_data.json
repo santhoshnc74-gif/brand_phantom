@@ -1,0 +1,445 @@
+{
+  "system_info": {
+    "app_name": "BrandSentinel",
+    "version": "v1.4.2-preview",
+    "environment": "Demo Sandbox",
+    "disclaimer": "SAMPLE DATA ACTIVE: All accounts, metrics, findings, and telemetry in this demonstration are fictional sample data for Northstar brand monitoring. No live scraping or persistent credential storage is implemented. Real API keys are never collected."
+  },
+  "current_brand": {
+    "id": "brand-northstar-tech",
+    "name": "Northstar Technologies",
+    "domain": "northstar-tech.io",
+    "slug": "northstar",
+    "status": "Monitored Active",
+    "official_handles": [
+      {
+        "platform": "Instagram",
+        "handle": "@northstar_tech",
+        "followers": "248K",
+        "verified": true
+      },
+      {
+        "platform": "X (Twitter)",
+        "handle": "@northstar_support",
+        "followers": "89.5K",
+        "verified": true
+      },
+      {
+        "platform": "TikTok",
+        "handle": "@northstar_official",
+        "followers": "120K",
+        "verified": true
+      },
+      {
+        "platform": "LinkedIn",
+        "handle": "company/northstar-technologies",
+        "followers": "65K",
+        "verified": true
+      }
+    ],
+    "official_apps": [
+      {
+        "store": "Apple App Store",
+        "app_id": "id158932014",
+        "name": "Northstar Mobile Authenticator & Suite"
+      },
+      {
+        "store": "Google Play",
+        "package": "com.northstar.mobile",
+        "name": "Northstar Mobile Security"
+      }
+    ],
+    "protected_trademarks": [
+      "Northstar\u00ae",
+      "Northstar Sentinel\u2122",
+      "StarGuard\u2122",
+      "TrueVerify\u2122"
+    ],
+    "created_date": "Jan 14, 2021",
+    "last_audit": "Oct 12, 2026, 08:00 AM"
+  },
+  "available_brands": [
+    {
+      "id": "brand-northstar-tech",
+      "name": "Northstar Technologies",
+      "industry": "Enterprise Security",
+      "active_threats": 8
+    },
+    {
+      "id": "brand-northstar-athletics",
+      "name": "Northstar Athletics",
+      "industry": "Apparel & Retail",
+      "active_threats": 3
+    },
+    {
+      "id": "brand-northstar-fintech",
+      "name": "Northstar FinTech",
+      "industry": "Financial Services",
+      "active_threats": 5
+    }
+  ],
+  "sources": [
+    {
+      "id": "source-ig",
+      "name": "Instagram Graph API",
+      "platform": "Instagram",
+      "type": "Social",
+      "status": "Ready to Connect",
+      "icon": "instagram",
+      "rate_limit": "1,240 / 5,000 requests/day",
+      "last_sync": "Paused",
+      "connected": false,
+      "description": "Scans handles, profile images, and bios for unauthorized trademark and asset misuse."
+    },
+    {
+      "id": "source-x",
+      "name": "X (Twitter) API v2",
+      "platform": "X (Twitter)",
+      "type": "Social",
+      "status": "Connected",
+      "icon": "twitter",
+      "rate_limit": "850 / 2,500 requests/day",
+      "last_sync": "4 mins ago",
+      "connected": true,
+      "description": "Monitors impersonation accounts, spoofed customer care handles, and crypto phishing."
+    },
+    {
+      "id": "source-appstore",
+      "name": "Apple App Store Connect",
+      "platform": "Apple App Store",
+      "type": "Apps",
+      "status": "Ready to Connect",
+      "icon": "appstore",
+      "rate_limit": "Mock Sandbox Enabled",
+      "last_sync": "Not configured",
+      "connected": false,
+      "description": "Monitors global App Store listings for unauthorized brand bundles and logo mimicry."
+    },
+    {
+      "id": "source-playstore",
+      "name": "Google Play Developer API",
+      "platform": "Google Play",
+      "type": "Apps",
+      "status": "Ready to Connect",
+      "icon": "playstore",
+      "rate_limit": "Mock Sandbox Enabled",
+      "last_sync": "Not configured",
+      "connected": false,
+      "description": "Tracks APK package signatures, cloned binaries, and malicious keyword stuffing."
+    },
+    {
+      "id": "source-tiktok",
+      "name": "TikTok for Business API",
+      "platform": "TikTok",
+      "type": "Social",
+      "status": "Ready to Connect",
+      "icon": "tiktok",
+      "rate_limit": "Mock Sandbox Enabled",
+      "last_sync": "Not configured",
+      "connected": false,
+      "description": "Detects unauthorized brand ambassador accounts and synthetic deepfake endorsements."
+    },
+    {
+      "id": "source-dns",
+      "name": "Global Domain Registry & DNS Feed",
+      "platform": "Domain Registry",
+      "type": "Domains",
+      "status": "Connected",
+      "icon": "globe",
+      "rate_limit": "Live Telemetry Feed",
+      "last_sync": "Just now",
+      "connected": true,
+      "description": "Continuously ingests new gTLD registrations matching brand regex and typosquats."
+    }
+  ],
+  "findings": [
+    {
+      "id": "finding-1791800366",
+      "target_name": "@northstar_fake_promo",
+      "category": "Social",
+      "platform": "Instagram",
+      "platform_icon": "instagram",
+      "risk_level": "High",
+      "risk_score": 89,
+      "detection_type": "Suspicious Name & Asset Squatting",
+      "match_score": "92% Pattern Match",
+      "detected_at": "Just now",
+      "status": "Flagged",
+      "evidence": {
+        "target_handle": "@northstar_fake_promo",
+        "official_counterpart": "@northstar_tech (Official)",
+        "audience": "Simulated target audience analysis",
+        "official_audience": "248K verified enterprise reach",
+        "account_age": "Newly created pattern detected",
+        "violations": [
+          "Similarity scan against '@northstar_fake_promo' flagged unauthorized brand mark reproduction",
+          "Unverified registration telemetry detected on external source feed",
+          "Potential credential harvesting or confusion hazard"
+        ],
+        "host_telemetry": "Simulated sandbox scanner telemetry (Demo mode)",
+        "visual_comparison": {
+          "logo_similarity": "92.3% Simulated Asset Match",
+          "color_palette": "Navy & Electric Blue overlap",
+          "typography": "High string similarity"
+        },
+        "screenshot_note": "Discovered during simulated scan query for '@northstar_fake_promo' across Instagram."
+      }
+    },
+    {
+      "id": "finding-001",
+      "target_name": "@northstar_official_sale",
+      "category": "Social",
+      "platform": "Instagram",
+      "platform_icon": "instagram",
+      "risk_level": "Critical",
+      "risk_score": 96,
+      "detection_type": "Phishing & Fake Storefront",
+      "match_score": "98% Visual Match",
+      "detected_at": "Today, 09:14 AM",
+      "status": "Takedown Sent",
+      "evidence": {
+        "target_handle": "@northstar_official_sale",
+        "official_counterpart": "@northstar_tech (Verified)",
+        "audience": "14.2K followers (High engagement)",
+        "official_audience": "248K verified followers",
+        "account_age": "Created 4 days ago (Oct 8, 2026)",
+        "violations": [
+          "Unauthorized exact reproduction of Northstar starburst logo in avatar",
+          "Bio directs followers to fraudulent checkout domain: northstar-vip-discount.xyz",
+          "Direct message campaign offering fake employee discount vouchers"
+        ],
+        "host_telemetry": "Origin IP: 198.51.100.42 (Anonymous VPN / Proxy)",
+        "visual_comparison": {
+          "logo_similarity": "98.4% Vector Match",
+          "color_palette": "Exact hex palette match (#0B132B, #3B82F6)",
+          "typography": "Mimicking Northstar brand font family"
+        },
+        "screenshot_note": "Profile banner simulates official autumn promotional campaign with unauthorized payment gateway link."
+      }
+    },
+    {
+      "id": "finding-002",
+      "target_name": "Northstar Mobile Authenticator",
+      "category": "Apps",
+      "platform": "Google Play Store",
+      "platform_icon": "playstore",
+      "risk_level": "Critical",
+      "risk_score": 94,
+      "detection_type": "Trojanized APK Package",
+      "match_score": "94% Asset Similarity",
+      "detected_at": "Yesterday, 04:30 PM",
+      "status": "Under Review",
+      "evidence": {
+        "target_handle": "com.northstar.auth.token.free (Dev: DevStar Mobile)",
+        "official_counterpart": "com.northstar.mobile (Official Publisher: Northstar Technologies)",
+        "audience": "5,000+ Downloads reported",
+        "official_audience": "1.2M+ Authenticated Enterprise Installations",
+        "account_age": "Published Oct 2, 2026 (Unsigned Cert)",
+        "violations": [
+          "Deceptively named to intercept corporate SSO two-factor authentication codes",
+          "Hardcoded external telemetry transmitting device identifiers and keystrokes",
+          "Decompiled APK contains unauthorized copyrighted UI icons and graphics"
+        ],
+        "host_telemetry": "Server C2 endpoint: 203.0.113.88 (Offshore cloud)",
+        "visual_comparison": {
+          "logo_similarity": "94.2% Glyph Match",
+          "color_palette": "Near match (#0A1128 background, altered teal rim)",
+          "typography": "High overlap in manifest strings"
+        },
+        "screenshot_note": "Application launch screen mimics Northstar enterprise sign-in screen to harvest corporate credentials."
+      }
+    },
+    {
+      "id": "finding-003",
+      "target_name": "@NorthstarHelpDesk_v2",
+      "category": "Social",
+      "platform": "X (Twitter)",
+      "platform_icon": "twitter",
+      "risk_level": "High",
+      "risk_score": 88,
+      "detection_type": "Support Account Impersonation",
+      "match_score": "91% Bio & Name Match",
+      "detected_at": "Yesterday, 11:22 AM",
+      "status": "Flagged",
+      "evidence": {
+        "target_handle": "@NorthstarHelpDesk_v2",
+        "official_counterpart": "@northstar_support (Official Support)",
+        "audience": "312 followers (Active bot network)",
+        "official_audience": "89.5K verified followers",
+        "account_age": "Created Oct 10, 2026",
+        "violations": [
+          "Aggressively replying to customer complaint threads asking for wallet keys and OTP tokens",
+          "Using manipulated blue badge emoji in display name to simulate verification",
+          "Automated reply bot active within 30 seconds of brand mentions"
+        ],
+        "host_telemetry": "Automated API bot client detected via automated heuristics",
+        "visual_comparison": {
+          "logo_similarity": "91.0% Circular crop of official avatar",
+          "color_palette": "Official brand dark navy backdrop",
+          "typography": "Copied standard support disclaimer text verbatim"
+        },
+        "screenshot_note": "Thread replies direct frustrated users to private chat for 'immediate compensation'."
+      }
+    },
+    {
+      "id": "finding-004",
+      "target_name": "Northstar VIP Rewards Club",
+      "category": "Apps",
+      "platform": "Apple App Store",
+      "platform_icon": "appstore",
+      "risk_level": "High",
+      "risk_score": 82,
+      "detection_type": "Counterfeit Loyalty App",
+      "match_score": "87% Typography Match",
+      "detected_at": "Oct 10, 2026",
+      "status": "Escalated",
+      "evidence": {
+        "target_handle": "id982341908 (Publisher: StarPeak Media Ltd)",
+        "official_counterpart": "id158932014 (Northstar Technologies LLC)",
+        "audience": "850 Reviews (4.8 artificially inflated rating)",
+        "official_audience": "42K authentic user ratings",
+        "account_age": "Released Sep 28, 2026",
+        "violations": [
+          "Promising non-existent $500 corporate credits in exchange for recurring subscription fee",
+          "Infringes Northstar registered trademarks 'TrueVerify' and 'StarGuard'",
+          "Misleading metadata in App Store search optimization keywords"
+        ],
+        "host_telemetry": "CDN Hosted Product Page (Region: EMEA)",
+        "visual_comparison": {
+          "logo_similarity": "86.8% Similar star icon geometry",
+          "color_palette": "Matching deep navy and electric cobalt accent",
+          "typography": "Identical product title formatting"
+        },
+        "screenshot_note": "In-app purchase flow charges $14.99/week for nonexistent premium benefits."
+      }
+    },
+    {
+      "id": "finding-005",
+      "target_name": "@northstar_deals_global",
+      "category": "Social",
+      "platform": "TikTok",
+      "platform_icon": "tiktok",
+      "risk_level": "Medium",
+      "risk_score": 68,
+      "detection_type": "Unauthorized Affiliate Squatting",
+      "match_score": "79% Audio & Visual Match",
+      "detected_at": "Oct 9, 2026",
+      "status": "Under Review",
+      "evidence": {
+        "target_handle": "@northstar_deals_global",
+        "official_counterpart": "@northstar_official",
+        "audience": "38.5K followers",
+        "official_audience": "120K verified community",
+        "account_age": "Created Sep 15, 2026",
+        "violations": [
+          "Posting synthetic AI voiceover clips imitating company announcements",
+          "Bio URL redirects through multiple affiliate link aggregators",
+          "No commercial licensing agreement on record"
+        ],
+        "host_telemetry": "Mobile device telemetry fingerprint",
+        "visual_comparison": {
+          "logo_similarity": "79.2% Cropped video watermark",
+          "color_palette": "Altered saturation",
+          "typography": "Captions borrow trademarked slogan"
+        },
+        "screenshot_note": "Video loops product demo with unauthorized promo coupon code."
+      }
+    },
+    {
+      "id": "finding-006",
+      "target_name": "northstar-cloud-auth.net",
+      "category": "Apps",
+      "platform": "Domain & Web Gateway",
+      "platform_icon": "globe",
+      "risk_level": "Critical",
+      "risk_score": 97,
+      "detection_type": "Credential Harvesting Clone",
+      "match_score": "99% HTML Clone",
+      "detected_at": "Oct 9, 2026",
+      "status": "Flagged",
+      "evidence": {
+        "target_handle": "https://northstar-cloud-auth.net/login",
+        "official_counterpart": "https://auth.northstar-tech.io (Production Auth)",
+        "audience": "4,100 inbound click redirects intercepted",
+        "official_audience": "Protected Okta/SAML Enterprise Gateway",
+        "account_age": "Registered Oct 8, 2026 (NameCheap / Cloudflare SSL)",
+        "violations": [
+          "Complete pixel-for-pixel replica of official Northstar enterprise portal login page",
+          "Injected JavaScript logs cleartext passwords to remote exfiltration endpoint",
+          "Active SSL certificate to deceive end users into trusting browser padlock icon"
+        ],
+        "host_telemetry": "Origin: 192.0.2.145 (Unregistered Autonomous System)",
+        "visual_comparison": {
+          "logo_similarity": "99.1% High resolution SVG rip",
+          "color_palette": "Exact CSS match",
+          "typography": "Exact stylesheet imports"
+        },
+        "screenshot_note": "Fake password reset dialog triggers immediate account lockout message to panic targets."
+      }
+    },
+    {
+      "id": "finding-007",
+      "target_name": "@NorthstarTechCareers",
+      "category": "Social",
+      "platform": "X (Twitter)",
+      "platform_icon": "twitter",
+      "risk_level": "High",
+      "risk_score": 85,
+      "detection_type": "Recruitment Wire Fraud",
+      "match_score": "88% Organization Match",
+      "detected_at": "Oct 8, 2026",
+      "status": "Flagged",
+      "evidence": {
+        "target_handle": "@NorthstarTechCareers",
+        "official_counterpart": "@northstar_tech",
+        "audience": "1.8K followers",
+        "official_audience": "248K company network",
+        "account_age": "Created Sep 20, 2026",
+        "violations": [
+          "Soliciting candidate resumes containing sensitive PII and bank details",
+          "Sending fake offer letters demanding $250 home office equipment deposit",
+          "Falsely claiming affiliation with Northstar Global Talent Acquisition"
+        ],
+        "host_telemetry": "IP Geolocation: Routed through Tor exit node",
+        "visual_comparison": {
+          "logo_similarity": "88.5% High-res copy of corporate recruitment banner",
+          "color_palette": "Brand blue and navy theme",
+          "typography": "Matches Northstar career portal typography"
+        },
+        "screenshot_note": "Direct messages contain fake DocuSign links targeting tech job seekers."
+      }
+    },
+    {
+      "id": "finding-008",
+      "target_name": "Northstar Security Guard Lite",
+      "category": "Apps",
+      "platform": "Google Play Store",
+      "platform_icon": "playstore",
+      "risk_level": "Medium",
+      "risk_score": 71,
+      "detection_type": "Adware & Keyword Stuffing",
+      "match_score": "81% Title Similarity",
+      "detected_at": "Oct 7, 2026",
+      "status": "Under Review",
+      "evidence": {
+        "target_handle": "com.quickguard.northstar.security",
+        "official_counterpart": "com.northstar.mobile",
+        "audience": "10,000+ Downloads",
+        "official_audience": "1.2M Enterprise Users",
+        "account_age": "Published Sep 10, 2026",
+        "violations": [
+          "Using Northstar trademarked brand name in package keywords to hijack search ranking",
+          "Aggressive ad framework triggers unprompted full-screen interstitial ads",
+          "Requests intrusive device permissions including background location and contacts"
+        ],
+        "host_telemetry": "Monetization SDK: Third-party adware mediation network",
+        "visual_comparison": {
+          "logo_similarity": "81.0% Hybrid emblem merging star with generic lock",
+          "color_palette": "Similar deep navy shade",
+          "typography": "Matches promotional badge font"
+        },
+        "screenshot_note": "Icon appears virtually indistinguishable from official app at 48x48 screen dimensions."
+      }
+    }
+  ]
+}

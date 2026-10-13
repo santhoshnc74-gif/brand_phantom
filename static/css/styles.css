@@ -1,0 +1,139 @@
+/* BrandSentinel Custom Styles & Polish */
+
+:root {
+  --navy-sidebar: #0B132B;
+  --navy-sidebar-dark: #070B19;
+  --navy-sidebar-border: #1E293B;
+  --blue-primary: #2563EB;
+  --blue-primary-hover: #1D4ED8;
+  --blue-accent: #38BDF8;
+  --blue-glow: rgba(37, 99, 235, 0.25);
+  --bg-page: #F8FAFC;
+  --card-border: #E2E8F0;
+  --text-dark: #0F172A;
+  --text-muted: #64748B;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--text-dark);
+  background-color: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Sidebar Custom Scrollbar */
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: #0B132B;
+}
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: #1E293B;
+}
+
+/* Radar Pulse Animation */
+@keyframes radar-pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(37, 99, 235, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
+  }
+}
+
+.radar-dot {
+  animation: radar-pulse 2s infinite;
+}
+
+/* Scanning Beam Animation */
+@keyframes scan-beam {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(300%);
+  }
+}
+
+.scan-beam-active {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  background: linear-gradient(180deg, rgba(37, 99, 235, 0.4) 0%, rgba(56, 189, 248, 0) 100%);
+  animation: scan-beam 1.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Row Active State */
+.table-row-selected {
+  background-color: #EFF6FF !important;
+  border-left: 4px solid #2563EB !important;
+}
+
+.table-row-hover:hover {
+  background-color: #F8FAFC;
+}
+
+/* Glass & Card Elevation */
+.card-shadow {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+}
+
+.card-elevated {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Micro-transitions */
+.smooth-trans {
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Modal Backdrop */
+.modal-backdrop {
+  background-color: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+/* Brand Starburst Glow */
+.brand-star {
+  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.4));
+}
+
+/* Focus Visible for Accessibility */
+button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible {
+  outline: 2px solid #2563EB;
+  outline-offset: 2px;
+}
+
+/* Mobile Offcanvas Drawer */
+@media (max-width: 1024px) {
+  .sidebar-offcanvas {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+  .sidebar-offcanvas.open {
+    transform: translateX(0);
+  }
+}

@@ -1,0 +1,2162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BrandSentinel — Enterprise Brand Protection & Threat Mitigation</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            navy: {
+              950: '#070B19',
+              900: '#0B132B',
+              850: '#0F1A3A',
+              800: '#15244E',
+              700: '#1C3166',
+            },
+            brand: {
+              blue: '#2563EB',
+              blueHover: '#1D4ED8',
+              cyan: '#38BDF8',
+              darkNavy: '#0B132B'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white">
+
+  <!-- Mobile Backdrop for Sidebar -->
+  <div id="mobileBackdrop" class="fixed inset-0 bg-slate-950/60 z-40 hidden lg:hidden backdrop-blur-sm transition-opacity" onclick="toggleMobileSidebar()"></div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm pointer-events-none" aria-live="polite"></div>
+
+  <!-- Main Application Wrapper -->
+  <div class="flex h-screen overflow-hidden">
+
+    <!-- 1. DARK NAVY SIDEBAR -->
+    <aside id="sidebar" class="sidebar-offcanvas fixed lg:static inset-y-0 left-0 z-50 w-64 bg-navy-900 text-slate-300 flex flex-col border-r border-navy-800 transition-transform duration-300 ease-in-out shrink-0">
+      
+      <!-- BrandSentinel Branding -->
+      <div class="h-16 flex items-center justify-between px-5 border-b border-navy-800/80 bg-navy-950/50">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-blue-700 via-blue-600 to-sky-400 flex items-center justify-center text-white shadow-lg shadow-blue-900/40">
+            <!-- Sentinel Shield Radar Icon -->
+            <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="m9 12 2 2 4-4"/>
+            </svg>
+          </div>
+          <div>
+            <span class="text-base font-bold tracking-tight text-white flex items-center gap-1.5">
+              BrandSentinel
+            </span>
+            <span class="text-[10px] font-semibold tracking-wider uppercase text-sky-400 block -mt-0.5">
+              Brand Shield AI
+            </span>
+          </div>
+        </div>
+
+        <!-- Mobile close button -->
+        <button onclick="toggleMobileSidebar()" class="lg:hidden text-slate-400 hover:text-white p-1 rounded-md" aria-label="Close Sidebar">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="flex-1 px-3 py-5 space-y-1.5 overflow-y-auto sidebar-scroll" aria-label="Primary Navigation">
+        
+        <!-- Brand profile -->
+        <a href="#brand-profile" onclick="switchNav('brand-profile', event)" id="nav-brand-profile" class="nav-item group flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-navy-800 transition-colors">
+          <svg class="w-4 h-4 text-slate-400 group-hover:text-sky-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+          </svg>
+          <span>Brand profile</span>
+        </a>
+
+        <!-- Scan & review (Active Default) -->
+        <a href="#scan-review" onclick="switchNav('scan-review', event)" id="nav-scan-review" class="nav-item group flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-semibold text-white bg-blue-600 shadow-sm shadow-blue-700/50 transition-colors">
+          <div class="flex items-center gap-3">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/>
+            </svg>
+            <span>Scan & review</span>
+          </div>
+          <span class="w-2 h-2 rounded-full bg-sky-300 radar-dot"></span>
+        </a>
+
+        <!-- API connections -->
+        <a href="#api-connections" onclick="switchNav('api-connections', event)" id="nav-api-connections" class="nav-item group flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-navy-800 transition-colors">
+          <div class="flex items-center gap-3">
+            <svg class="w-4 h-4 text-slate-400 group-hover:text-sky-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+            </svg>
+            <span>API connections</span>
+          </div>
+          <span class="text-xs bg-navy-800 text-sky-400 px-2 py-0.5 rounded-full font-mono">6 Feeds</span>
+        </a>
+
+        <!-- Data sources (Active) -->
+        <a href="#data-sources" onclick="switchNav('data-sources', event)" id="nav-data-sources" class="nav-item group flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-navy-800 transition-colors">
+          <div class="flex items-center gap-3">
+            <svg class="w-4 h-4 text-slate-400 group-hover:text-sky-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2 1.5 3 3.5 3h9c2 0 3.5-1 3.5-3V7M4 7c0-2 1.5-3 3.5-3h9c2 0 3.5 1 3.5 3M4 7h16m-16 5c0 2 1.5 3 3.5 3h9c2 0 3.5-1 3.5-3"/>
+            </svg>
+            <span>Data sources</span>
+          </div>
+          <span class="inline-flex items-center gap-1.5 text-xs text-slate-400">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span class="text-[11px] font-medium text-slate-300">Active</span>
+          </span>
+        </a>
+
+        <!-- Reports -->
+        <a href="#reports" onclick="switchNav('reports', event)" id="nav-reports" class="nav-item group flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-navy-800 transition-colors">
+          <svg class="w-4 h-4 text-slate-400 group-hover:text-sky-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+          <span>Reports</span>
+        </a>
+
+        <!-- Sub-section: Protection Summary -->
+        <div class="pt-6 pb-2 px-1">
+          <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-2">
+            Active Shield Metrics
+          </div>
+          <div class="mt-2.5 p-3 rounded-lg bg-navy-950/60 border border-navy-800/80 space-y-2">
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-400">Threats Flagged</span>
+              <span class="font-bold text-rose-400" id="sidebarFlaggedCount">8</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-400">Match Confidence</span>
+              <span class="font-bold text-sky-400">94.8% avg</span>
+            </div>
+            <div class="flex justify-between text-xs">
+              <span class="text-slate-400">Active Source Feeds</span>
+              <span class="font-bold text-emerald-400" id="sidebarActiveSourcesCount">3 / 6</span>
+            </div>
+            <div class="w-full bg-navy-800 h-1.5 rounded-full overflow-hidden mt-1">
+              <div class="bg-gradient-to-r from-blue-500 to-sky-400 h-full w-[65%]"></div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Sidebar Footer Status -->
+      <div class="p-4 border-t border-navy-800 bg-navy-950/60 text-xs">
+        <div class="flex items-center justify-between text-slate-400">
+          <span class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span>Demo Engine Active</span>
+          </span>
+          <span class="text-[10px] font-mono text-slate-400">v1.4.2</span>
+        </div>
+        <div class="mt-1 text-[11px] text-slate-400 leading-tight">
+          Simulated telemetry sandbox
+        </div>
+      </div>
+    </aside>
+
+    <!-- 2. MAIN APPLICATION CONTENT COLUMN -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+      <!-- TOP BAR -->
+      <header class="h-16 bg-white border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between shrink-0 shadow-sm z-30">
+        
+        <!-- Left: Mobile Toggle + Northstar Brand Selector -->
+        <div class="flex items-center gap-3 sm:gap-4">
+          <!-- Mobile Hamburger Toggle -->
+          <button onclick="toggleMobileSidebar()" class="lg:hidden p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 focus:outline-none" aria-label="Open Sidebar Menu">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+
+          <!-- Northstar Brand Selector -->
+          <div class="relative">
+            <button id="brandSelectorBtn" onclick="toggleBrandDropdown()" class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg border border-slate-300 hover:border-slate-400 bg-slate-50 hover:bg-slate-100 text-slate-800 text-sm font-medium transition-colors" aria-expanded="false" aria-haspopup="true">
+              <!-- Northstar Starburst Logo Glyph -->
+              <span class="w-6 h-6 rounded-md bg-blue-600 flex items-center justify-center text-white text-xs shadow-inner">
+                <svg class="w-3.5 h-3.5 fill-current text-white brand-star" viewBox="0 0 24 24">
+                  <path d="M12 2l2.4 6.9 7.1.3-5.5 4.6 1.8 7-5.8-4.1-5.8 4.1 1.8-7-5.5-4.6 7.1-.3z"/>
+                </svg>
+              </span>
+              <div class="text-left">
+                <div class="flex items-center gap-1.5 leading-none">
+                  <span id="activeBrandName" class="font-bold text-slate-900 text-xs sm:text-sm">Northstar Technologies</span>
+                  <span class="hidden sm:inline-block px-1.5 py-0.2 text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 rounded">Official</span>
+                </div>
+              </div>
+              <svg class="w-4 h-4 text-slate-400 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+
+            <!-- Brand Selector Dropdown -->
+            <div id="brandDropdown" class="hidden absolute left-0 mt-1.5 w-64 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 z-50 text-xs sm:text-sm animate-in fade-in slide-in-from-top-1 duration-150">
+              <div class="px-3 py-1.5 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                Select Monitored Brand
+              </div>
+              <button onclick="selectBrand('brand-northstar-tech', 'Northstar Technologies')" class="w-full text-left px-3.5 py-2 hover:bg-blue-50 flex items-center justify-between text-slate-800 font-medium">
+                <span class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+                  Northstar Technologies
+                </span>
+                <span class="text-[11px] text-slate-400 font-normal">8 threats</span>
+              </button>
+              <button onclick="selectBrand('brand-northstar-athletics', 'Northstar Athletics')" class="w-full text-left px-3.5 py-2 hover:bg-blue-50 flex items-center justify-between text-slate-800 font-medium">
+                <span class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-slate-300"></span>
+                  Northstar Athletics
+                </span>
+                <span class="text-[11px] text-slate-400 font-normal">3 threats</span>
+              </button>
+              <button onclick="selectBrand('brand-northstar-fintech', 'Northstar FinTech')" class="w-full text-left px-3.5 py-2 hover:bg-blue-50 flex items-center justify-between text-slate-800 font-medium">
+                <span class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-slate-300"></span>
+                  Northstar FinTech
+                </span>
+                <span class="text-[11px] text-slate-400 font-normal">5 threats</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Center: Sample-Data Badge -->
+        <div class="flex items-center">
+          <div class="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-amber-50 border border-amber-300 text-amber-800 text-[11px] sm:text-xs font-semibold shadow-xs" title="Clearly labeled fictional sample data for demonstration.">
+            <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+            <span class="uppercase tracking-wider font-bold">Fictional Sample Data</span>
+            <span class="hidden md:inline text-amber-600 font-normal">| Demo Sandbox</span>
+          </div>
+        </div>
+
+        <!-- Right: Date Display + User Menu -->
+        <div class="flex items-center gap-3 sm:gap-4">
+          <!-- Live / Current Date -->
+          <div class="hidden md:flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+            <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <span id="currentDateDisplay">Mon, Oct 12, 2026</span>
+          </div>
+
+          <!-- Notification Bell -->
+          <button onclick="triggerToast('Notifications', '3 unverified brand alerts flagged in Instagram and Play Store.')" class="p-2 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 relative transition-colors" aria-label="Notifications">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500"></span>
+          </button>
+
+          <!-- User Menu Dropdown -->
+          <div class="relative">
+            <button id="userMenuBtn" onclick="toggleUserDropdown()" class="flex items-center gap-2 p-1 rounded-full hover:ring-2 hover:ring-slate-300 transition-all" aria-expanded="false" aria-haspopup="true">
+              <div class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs ring-1 ring-slate-200 shadow-sm">
+                VK
+              </div>
+              <div class="hidden xl:block text-left">
+                <div class="text-xs font-semibold text-slate-800 leading-tight">Vinay Kumar</div>
+                <div class="text-[10px] text-slate-500 leading-tight">Security Lead</div>
+              </div>
+              <svg class="w-3.5 h-3.5 text-slate-400 hidden xl:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+
+            <!-- User Menu Popup -->
+            <div id="userDropdown" class="hidden absolute right-0 mt-1.5 w-52 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 z-50 text-xs">
+              <div class="px-3.5 py-2 border-b border-slate-100">
+                <div class="font-bold text-slate-900">Vinay Kumar</div>
+                <div class="text-slate-500 text-[11px]">security@northstar-tech.io</div>
+              </div>
+              <button onclick="triggerToast('Profile Settings', 'Simulated user settings modal opened in demo mode.')" class="w-full text-left px-3.5 py-2 hover:bg-slate-50 text-slate-700">Profile & Role Permissions</button>
+              <button onclick="triggerToast('Workspace Audit', 'Audit logs exported for Northstar brand workspace.')" class="w-full text-left px-3.5 py-2 hover:bg-slate-50 text-slate-700">Workspace Audit Logs</button>
+              <div class="border-t border-slate-100 my-1"></div>
+              <button onclick="triggerToast('Sign Out', 'Demo session reset.')" class="w-full text-left px-3.5 py-2 hover:bg-rose-50 text-rose-600 font-semibold">Sign Out</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- VIEW 1: SCAN & REVIEW (Primary Recreated View) -->
+      <main id="view-scan-review" class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-7 space-y-6">
+        
+        <!-- Header Banner: "Connect. Scan. Verify." -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200/80 pb-5">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-blue-100 text-blue-800 tracking-wide uppercase">
+                Continuous Protection
+              </span>
+              <span class="text-xs text-slate-500 font-medium">Real-time Brand Integrity</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 mt-1">
+              Connect. Scan. Verify.
+            </h1>
+            <p class="text-sm text-slate-600 mt-1 max-w-2xl">
+              Cross-source intelligence detecting unauthorized impersonators, fraudulent apps, and counterfeit storefronts infringing on Northstar trademarks.
+            </p>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="flex items-center gap-2.5 shrink-0">
+            <!-- Export dropdown with Telemetry and Summary -->
+            <div class="relative inline-block text-left" id="exportDropdownContainer">
+              <button onclick="toggleExportMenu()" id="exportDropdownBtn" type="button" class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 shadow-xs transition-colors" aria-expanded="false" aria-haspopup="true">
+                <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                <span>Export Report</span>
+                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </button>
+              <div id="exportMenu" class="hidden absolute right-0 mt-1.5 w-56 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 z-50 text-xs animate-in fade-in duration-100">
+                <div class="px-3 py-1 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Raw Telemetry (RBAC)</div>
+                <button type="button" onclick="exportData('telemetry', 'csv')" class="w-full text-left px-3.5 py-1.5 hover:bg-slate-50 text-slate-700 flex items-center justify-between">
+                  <span>Export Telemetry (CSV)</span>
+                  <span class="text-[10px] font-mono bg-slate-100 px-1 rounded text-slate-500">.csv</span>
+                </button>
+                <button type="button" onclick="exportData('telemetry', 'json')" class="w-full text-left px-3.5 py-1.5 hover:bg-slate-50 text-slate-700 flex items-center justify-between">
+                  <span>Export Telemetry (JSON)</span>
+                  <span class="text-[10px] font-mono bg-slate-100 px-1 rounded text-slate-500">.json</span>
+                </button>
+                <div class="border-t border-slate-100 my-1"></div>
+                <div class="px-3 py-1 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Executive Summary</div>
+                <button type="button" onclick="exportData('summary', 'csv')" class="w-full text-left px-3.5 py-1.5 hover:bg-slate-50 text-slate-700 flex items-center justify-between">
+                  <span>Export Summary (CSV)</span>
+                  <span class="text-[10px] font-mono bg-slate-100 px-1 rounded text-slate-500">.csv</span>
+                </button>
+                <button type="button" onclick="exportData('summary', 'json')" class="w-full text-left px-3.5 py-1.5 hover:bg-slate-50 text-slate-700 flex items-center justify-between">
+                  <span>Export Summary (JSON)</span>
+                  <span class="text-[10px] font-mono bg-slate-100 px-1 rounded text-slate-500">.json</span>
+                </button>
+              </div>
+            </div>
+            <button onclick="openDataSourceModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-500/30 transition-colors">
+              <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              <span>Add Data Source</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3-STEP PROGRESS INDICATOR -->
+        <div class="bg-white rounded-xl border border-slate-200/90 p-4 sm:p-5 card-shadow" aria-label="Brand Protection Workflow Steps">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 relative">
+            
+            <!-- Step 1: Connect Source -->
+            <div class="flex items-start gap-3.5 p-3 rounded-lg bg-slate-50/80 border border-slate-200/60 relative">
+              <div class="w-9 h-9 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 ring-4 ring-emerald-50">
+                <svg class="w-5 h-5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-xs font-bold text-slate-900">Step 1</span>
+                  <span class="text-[10px] font-semibold px-1.5 py-0.2 bg-emerald-100 text-emerald-800 rounded">3 Feeds Active</span>
+                </div>
+                <h2 class="text-sm font-semibold text-slate-800 mt-0.5">Connect Source</h2>
+                <p class="text-xs text-slate-500 leading-snug mt-0.5">Ingest Instagram, X, App Stores & DNS registry telemetry.</p>
+              </div>
+            </div>
+
+            <!-- Step 2: Scan & Detect (Active) -->
+            <div class="flex items-start gap-3.5 p-3 rounded-lg bg-blue-50/80 border border-blue-200 relative ring-1 ring-blue-300/60">
+              <div class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-blue-500/30">
+                <svg class="w-5 h-5 animate-spin-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-xs font-bold text-blue-900">Step 2</span>
+                  <span class="text-[10px] font-semibold px-1.5 py-0.2 bg-blue-200 text-blue-900 rounded">Scanning Active</span>
+                </div>
+                <h2 class="text-sm font-semibold text-blue-950 mt-0.5">Scan & Detect</h2>
+                <p class="text-xs text-blue-800/80 leading-snug mt-0.5">Match visual assets, brand strings, and APK binaries.</p>
+              </div>
+            </div>
+
+            <!-- Step 3: Verify & Remediate -->
+            <div class="flex items-start gap-3.5 p-3 rounded-lg bg-slate-50/80 border border-slate-200/60 relative">
+              <div class="w-9 h-9 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center shrink-0">
+                <span class="text-xs font-bold">3</span>
+              </div>
+              <div class="min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-xs font-bold text-slate-700">Step 3</span>
+                  <span class="text-[10px] font-semibold px-1.5 py-0.2 bg-rose-100 text-rose-800 rounded">8 Pending</span>
+                </div>
+                <h2 class="text-sm font-semibold text-slate-800 mt-0.5">Verify & Remediate</h2>
+                <p class="text-xs text-slate-500 leading-snug mt-0.5">Review forensic evidence and trigger simulated takedowns.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- SCAN CONTROL BAR (Input, Source Selector, Scan Button) -->
+        <div class="bg-white rounded-xl border border-slate-200/90 p-4 card-shadow">
+          <form id="scanForm" onsubmit="handleTriggerScan(event)" class="flex flex-col md:flex-row items-stretch gap-3">
+            
+            <!-- Account/App Input -->
+            <div class="flex-1 relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              </div>
+              <input 
+                type="text" 
+                id="scanQueryInput" 
+                placeholder="Enter account handle, app package, or URL (e.g. @northstar_official_sale, com.northstar.auth)..." 
+                class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all"
+                value="@northstar_official_sale"
+                required
+              >
+            </div>
+
+            <!-- Source Selector -->
+            <div class="w-full md:w-56 shrink-0 relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+              </div>
+              <select 
+                id="scanSourceSelect" 
+                onchange="handleScanSourceSelectChanged()"
+                class="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 font-medium appearance-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all cursor-pointer"
+              >
+                <option value="All Sources">All Sources (Federated)</option>
+                <option value="youtube">YouTube Data API</option>
+                <option value="telegram">Telegram Bot API</option>
+                <option value="facebook">Meta Page & Graph</option>
+                <option value="apple_app_store">Apple App Store</option>
+                <option value="google_play">Google Play Store</option>
+              </select>
+              <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </div>
+            </div>
+
+            <!-- Scan Source Button -->
+            <button 
+              type="submit" 
+              id="scanBtn"
+              class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm shadow-sm shadow-blue-600/30 transition-all shrink-0 active:scale-[0.98]"
+            >
+              <svg id="scanBtnIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+              <span id="scanBtnText">Scan sources</span>
+            </button>
+
+          </form>
+
+          <!-- Multi-Source Platform Checkboxes -->
+          <div class="mt-3 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs">
+            <div class="flex items-center gap-2">
+              <span class="text-slate-700 font-semibold text-[11px] uppercase tracking-wider">Multi-Source Target Feeds:</span>
+              <div class="flex flex-wrap items-center gap-1.5" id="multiSourceCheckboxContainer">
+                <label class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer text-[11px] font-medium transition-colors select-none">
+                  <input type="checkbox" name="multiSourceOption" value="youtube" checked class="rounded text-blue-600 focus:ring-blue-500 w-3.5 h-3.5">
+                  <span>YouTube</span>
+                </label>
+                <label class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer text-[11px] font-medium transition-colors select-none">
+                  <input type="checkbox" name="multiSourceOption" value="telegram" checked class="rounded text-blue-600 focus:ring-blue-500 w-3.5 h-3.5">
+                  <span>Telegram</span>
+                </label>
+                <label class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer text-[11px] font-medium transition-colors select-none">
+                  <input type="checkbox" name="multiSourceOption" value="facebook" checked class="rounded text-blue-600 focus:ring-blue-500 w-3.5 h-3.5">
+                  <span>Facebook</span>
+                </label>
+                <label class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer text-[11px] font-medium transition-colors select-none">
+                  <input type="checkbox" name="multiSourceOption" value="apple_app_store" checked class="rounded text-blue-600 focus:ring-blue-500 w-3.5 h-3.5">
+                  <span>Apple App Store</span>
+                </label>
+                <label class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer text-[11px] font-medium transition-colors select-none">
+                  <input type="checkbox" name="multiSourceOption" value="google_play" checked class="rounded text-blue-600 focus:ring-blue-500 w-3.5 h-3.5">
+                  <span>Google Play</span>
+                </label>
+              </div>
+            </div>
+            <button type="button" onclick="toggleAllScanSources()" class="text-[11px] text-blue-600 hover:underline font-semibold">
+              Select All / Reset
+            </button>
+          </div>
+
+          <!-- Disclaimer Footnote -->
+          <div class="mt-2 text-[11px] text-slate-500 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Multi-Source Engine queries verified connectors. Upstream timeouts or outages are isolated per provider without discarding valid discoveries.</span>
+          </div>
+        </div>
+
+        <!-- CHECK WEBSITE URL / PHISHING MODEL CARD -->
+        <div id="websiteScanCard" class="bg-white rounded-xl border border-slate-200/90 p-5 card-shadow space-y-4">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Left: Check Website URL Form -->
+            <div class="space-y-4">
+              <div>
+                <h3 class="text-base font-bold text-slate-900">Check Website URL</h3>
+                <p class="text-xs text-slate-500">Check website URLs and review results for your brand.</p>
+              </div>
+
+              <form id="websiteScanForm" onsubmit="handleWebsiteScan(event)" class="space-y-3.5">
+                <div>
+                  <label for="websiteBrandSelect" class="block text-xs font-semibold text-slate-700 mb-1">Brand</label>
+                  <select id="websiteBrandSelect" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs sm:text-sm text-slate-900 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all">
+                    <!-- Populated dynamically with available brands -->
+                  </select>
+                </div>
+
+                <div>
+                  <label for="websiteScanInput" class="block text-xs font-semibold text-slate-700 mb-1">Website URL</label>
+                  <input 
+                    type="text" 
+                    id="websiteScanInput" 
+                    placeholder="https://portal.example/account" 
+                    class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 font-mono transition-all"
+                    required
+                  >
+                </div>
+
+                <div class="pt-1">
+                  <button 
+                    type="submit" 
+                    id="websiteScanBtn" 
+                    class="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm shadow-sm shadow-blue-600/30 transition-all shrink-0 active:scale-[0.98]"
+                  >
+                    <svg id="websiteScanBtnIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span id="websiteScanBtnText">Check URL</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Right: Result Display Card -->
+            <div id="websiteResultContainer" class="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-3 flex flex-col justify-between">
+              <div class="space-y-3">
+                <div class="flex items-center justify-between pb-1 border-b border-slate-200/60">
+                  <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700" id="websiteResultHeaderTitle">Result</h4>
+                  <span id="websiteModelVersionTag" class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-200 text-slate-600">Model: inactive</span>
+                </div>
+
+                <!-- Identity Row -->
+                <div class="flex items-start gap-3 p-2.5 rounded-lg bg-white border border-slate-200/60">
+                  <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600 shrink-0 mt-0.5">
+                    <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                  </div>
+                  <div class="min-w-0">
+                    <span id="websiteIdentityBadge" class="inline-block px-2.5 py-0.5 rounded text-xs font-semibold bg-slate-200 text-slate-700">Identity: Not verified as official</span>
+                    <p id="websiteIdentityDesc" class="text-xs text-slate-600 mt-1">No match in the selected brand's official registry.</p>
+                  </div>
+                </div>
+
+                <!-- Phishing Row -->
+                <div class="flex items-start gap-3 p-2.5 rounded-lg bg-white border border-slate-200/60">
+                  <div class="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600 shrink-0 mt-0.5">
+                    <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                  </div>
+                  <div class="min-w-0">
+                    <span id="websitePhishingBadge" class="inline-block px-2.5 py-0.5 rounded text-xs font-semibold bg-amber-100 text-amber-800">Phishing assessment: Likely phishing</span>
+                    <p id="websitePhishingDesc" class="text-xs text-slate-600 mt-1">Model prediction based on URL features.</p>
+                  </div>
+                </div>
+
+                <!-- Platform Limitation Alert -->
+                <div id="websitePlatformNotice" class="hidden p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-900 space-y-0.5">
+                  <div class="font-bold flex items-center gap-1.5 text-amber-950">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    <span>Platform Scope Notice</span>
+                  </div>
+                  <p id="websitePlatformNoticeText" class="text-[11px] text-amber-800"></p>
+                </div>
+
+                <!-- Error Banner -->
+                <div id="websiteScanErrorBanner" class="hidden p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-900 text-xs">
+                  <div class="font-bold" id="websiteScanErrorTitle">Scan Error</div>
+                  <p class="text-[11px] mt-0.5" id="websiteScanErrorMessage"></p>
+                </div>
+              </div>
+
+              <!-- Disclaimer Callout Box -->
+              <div class="mt-3 p-2.5 rounded-lg bg-blue-50/80 border border-blue-200/70 text-xs text-blue-900 flex items-center gap-2">
+                <svg class="w-4 h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span class="text-[11px] leading-tight">A phishing prediction does not establish official identity.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Collapsible Toggle Header for Exact YouTube Channel Verification -->
+        <button type="button" onclick="toggleYoutubeVerificationCard()" class="w-full flex items-center justify-between p-4 bg-white rounded-xl border border-slate-200/90 hover:bg-slate-50 transition-colors shadow-xs select-none">
+          <div class="flex items-center gap-2.5 text-sm font-bold text-slate-900">
+            <span id="ytCardChevron" class="text-xs transition-transform duration-200 text-slate-500">▼</span>
+            <span>Exact YouTube Channel Verification</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">Existing feature retained</span>
+            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </div>
+        </button>
+
+        <!-- EXACT YOUTUBE CHANNEL VERIFICATION CARD -->
+        <div id="youtubeVerificationCard" class="bg-white rounded-xl border border-slate-200/90 p-4 sm:p-5 card-shadow space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-100 pb-3">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 shrink-0">
+                <svg class="w-4 h-4 text-rose-600" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              </div>
+              <div>
+                <h3 class="text-sm font-bold text-slate-900">Exact YouTube Channel Verification</h3>
+                <p class="text-xs text-slate-500">Verify a specific channel against the brand's registered official YouTube account</p>
+              </div>
+            </div>
+            <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 self-start sm:self-auto">
+              Exact Identity Resolver
+            </span>
+          </div>
+
+          <form id="youtubeVerifyForm" onsubmit="handleVerifyYouTubeChannel(event)" class="flex flex-col sm:flex-row items-stretch gap-2.5">
+            <div class="flex-1 relative">
+              <input 
+                type="text" 
+                id="ytVerifyInput" 
+                placeholder="Enter channel URL (https://www.youtube.com/@handle or /channel/UC...), @handle, or UC... channel ID" 
+                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-rose-500 focus:ring-2 focus:ring-rose-100 font-mono transition-all"
+                required
+              >
+            </div>
+            <button 
+              type="submit" 
+              id="ytVerifyBtn" 
+              class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs sm:text-sm shadow-sm shadow-rose-600/30 transition-all shrink-0 active:scale-[0.98]"
+            >
+              <svg id="ytVerifyBtnIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <span id="ytVerifyBtnText">Verify Channel</span>
+            </button>
+          </form>
+
+          <p class="text-[11px] text-slate-500 leading-normal">
+            <strong>Supported inputs:</strong> <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-700 font-mono">https://www.youtube.com/channel/UC...</code>, <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-700 font-mono">https://www.youtube.com/@handle</code>, <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-700 font-mono">@handle</code>, or <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-700 font-mono">UC...</code> channel ID. Note: Video links are not supported and require a channel URL or ID.
+          </p>
+
+          <!-- Error Alert Banner -->
+          <div id="ytVerifyErrorBanner" class="hidden p-3.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-900 text-xs space-y-1">
+            <div class="font-bold flex items-center gap-1.5 text-rose-950" id="ytVerifyErrorTitle">
+              <!-- Error title -->
+            </div>
+            <p class="text-[11px] text-rose-800 leading-normal" id="ytVerifyErrorMessage">
+              <!-- Error message -->
+            </p>
+          </div>
+
+          <!-- Result Container -->
+          <div id="ytVerifyResultCard" class="hidden rounded-xl border border-slate-200/90 p-4 space-y-4 transition-all">
+            <!-- Dynamically populated by renderYouTubeVerificationResult -->
+          </div>
+        </div>
+
+        <!-- TWO-COLUMN WORKSPACE: Results Table & Evidence (Left 8 cols) + Connect Data Source Panel (Right 4 cols) -->
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+
+          <!-- LEFT COLUMN: Results Table + Evidence Card (xl:col-span-8) -->
+          <div class="xl:col-span-8 space-y-6">
+
+            <!-- MULTI-SOURCE SCAN SUMMARY CARD (Rendered on scan completion) -->
+            <div id="multiScanSummaryCard" class="hidden bg-white rounded-xl border border-slate-200/90 p-4 sm:p-5 card-shadow space-y-4 animate-in fade-in duration-200">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-100 pb-3">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span id="multiScanStatusPill" class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800">Scan Complete</span>
+                    <span id="multiScanQueryDisplay" class="text-xs font-semibold text-slate-800 font-mono">Query: "@northstar"</span>
+                  </div>
+                  <h3 class="text-sm font-bold text-slate-900 mt-0.5">Multi-Platform Intelligence Breakdown</h3>
+                </div>
+                <div class="text-[11px] text-slate-500" id="multiScanTimestampDisplay">
+                  Just now
+                </div>
+              </div>
+
+              <!-- Metrics Overview Grid -->
+              <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 text-center">
+                <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200/60">
+                  <div class="text-[10px] uppercase font-semibold text-slate-400">Sources Queried</div>
+                  <div class="text-lg font-extrabold text-slate-900 mt-0.5" id="sumSourcesQueried">0</div>
+                </div>
+                <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200/60">
+                  <div class="text-[10px] uppercase font-semibold text-slate-400">Candidates Found</div>
+                  <div class="text-lg font-extrabold text-slate-900 mt-0.5" id="sumCandidatesExamined">0</div>
+                </div>
+                <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200/60">
+                  <div class="text-[10px] uppercase font-semibold text-slate-400">Official Excluded</div>
+                  <div class="text-lg font-extrabold text-emerald-600 mt-0.5" id="sumOfficialExcluded">0</div>
+                </div>
+                <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200/60">
+                  <div class="text-[10px] uppercase font-semibold text-slate-400">Impersonators Flagged</div>
+                  <div class="text-lg font-extrabold text-rose-600 mt-0.5" id="sumImpersonatorsFlagged">0</div>
+                </div>
+                <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200/60">
+                  <div class="text-[10px] uppercase font-semibold text-slate-400">Inconclusive / Review</div>
+                  <div class="text-lg font-extrabold text-amber-600 mt-0.5" id="sumInconclusiveCount">0</div>
+                </div>
+              </div>
+
+              <!-- Telemetry Coverage Breakdown Chips -->
+              <div class="space-y-1.5">
+                <span class="text-[11px] font-semibold text-slate-600 block">Telemetry Stream Coverage:</span>
+                <div class="flex flex-wrap items-center gap-2" id="multiScanCoveragePills">
+                  <!-- Injected via JS -->
+                </div>
+              </div>
+
+              <!-- Partial Failure Notice Banner (Shown if any failed sources) -->
+              <div id="multiScanPartialFailureBanner" class="hidden p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs space-y-1">
+                <div class="font-bold flex items-center gap-1.5 text-amber-950">
+                  <svg class="w-4 h-4 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                  <span>Partial Source Coverage Alert</span>
+                </div>
+                <p class="text-[11px] text-amber-800 leading-normal" id="multiScanFailureText">
+                  One or more sources encountered upstream provider issues. Results from successful sources have been preserved above.
+                </p>
+              </div>
+            </div>
+
+            <!-- SAMPLE DATASET MANDATORY WARNING BANNER -->
+            <div id="sampleResultsBanner" class="p-3.5 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs animate-in fade-in duration-150">
+              <div class="flex items-center gap-2.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0 animate-pulse"></span>
+                <span class="font-bold">Sample results shown; no live scan has run.</span>
+                <span class="text-amber-800 text-[11px] hidden md:inline">Run a live scan above or configure provider credentials to evaluate candidate detections.</span>
+              </div>
+              <button type="button" onclick="document.getElementById('scanQueryInput').focus()" class="px-3 py-1 rounded-md bg-amber-200/80 hover:bg-amber-300 text-amber-950 font-semibold text-[11px] shrink-0 transition-colors">
+                Run Live Scan
+              </button>
+            </div>
+
+            <!-- RESULTS TABLE CARD -->
+            <div id="resultsTableCard" class="bg-white rounded-xl border border-slate-200/90 card-shadow overflow-hidden">
+              
+              <!-- Tabs Header (All, Social, Apps) + Search Toolbar -->
+              <div class="p-4 border-b border-slate-200/80 bg-slate-50/50 flex flex-col xl:flex-row xl:items-center xl:justify-between gap-3">
+                
+                <!-- Category Tabs (All, Social, Apps) -->
+                <div class="flex items-center gap-1 bg-slate-200/70 p-1 rounded-lg shrink-0" role="tablist" aria-label="Results filter tabs">
+                  <button 
+                    onclick="switchCategoryTab('all')" 
+                    id="tab-all" 
+                    role="tab" 
+                    aria-selected="true"
+                    class="px-3.5 py-1.5 text-xs font-bold rounded-md bg-white text-blue-700 shadow-xs transition-all flex items-center gap-1.5"
+                  >
+                    <span>All</span>
+                    <span id="count-badge-all" class="px-1.5 py-0.2 rounded-full text-[10px] bg-blue-100 text-blue-800 font-semibold">8</span>
+                  </button>
+                  <button 
+                    onclick="switchCategoryTab('social')" 
+                    id="tab-social" 
+                    role="tab" 
+                    aria-selected="false"
+                    class="px-3.5 py-1.5 text-xs font-semibold rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center gap-1.5"
+                  >
+                    <span>Social</span>
+                    <span id="count-badge-social" class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-200 text-slate-700 font-semibold">4</span>
+                  </button>
+                  <button 
+                    onclick="switchCategoryTab('apps')" 
+                    id="tab-apps" 
+                    role="tab" 
+                    aria-selected="false"
+                    class="px-3.5 py-1.5 text-xs font-semibold rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-all flex items-center gap-1.5"
+                  >
+                    <span>Apps</span>
+                    <span id="count-badge-apps" class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-200 text-slate-700 font-semibold">4</span>
+                  </button>
+                </div>
+
+                <!-- Table Filters: Search, Status, Risk & Sort -->
+                <div class="flex flex-wrap items-center gap-2">
+                  <!-- Search input -->
+                  <div class="relative">
+                    <input 
+                      type="text" 
+                      id="tableSearchInput" 
+                      oninput="handleTableSearch()" 
+                      placeholder="Search findings..." 
+                      class="w-32 sm:w-40 pl-7 pr-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    >
+                    <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none text-slate-400">
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </div>
+                  </div>
+
+                  <!-- Status Filter -->
+                  <select 
+                    id="statusFilterSelect" 
+                    onchange="handleStatusFilter()" 
+                    class="px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer"
+                    aria-label="Filter by review status"
+                  >
+                    <option value="all">All Statuses</option>
+                    <option value="new">New</option>
+                    <option value="in_review">In review</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="dismissed">Dismissed</option>
+                    <option value="whitelisted">Whitelisted</option>
+                  </select>
+
+                  <!-- Risk Severity Filter -->
+                  <select 
+                    id="riskFilterSelect" 
+                    onchange="handleRiskFilter()" 
+                    class="px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer"
+                    aria-label="Filter by risk severity"
+                  >
+                    <option value="all">All Risks</option>
+                    <option value="critical">Critical</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                  </select>
+
+                  <!-- Sort By Selector -->
+                  <select 
+                    id="sortBySelect" 
+                    onchange="handleSortBy()" 
+                    class="px-2.5 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-pointer"
+                    aria-label="Sort findings"
+                  >
+                    <option value="risk_desc">Sort: Risk (High to Low)</option>
+                    <option value="risk_asc">Sort: Risk (Low to High)</option>
+                    <option value="date_desc">Sort: Date (Newest)</option>
+                    <option value="date_asc">Sort: Date (Oldest)</option>
+                    <option value="score_desc">Sort: Match Score</option>
+                    <option value="name_asc">Sort: Asset Name (A-Z)</option>
+                  </select>
+                </div>
+
+              </div>
+
+              <!-- BULK ACTIONS BAR (Visible when >= 1 rows checked) -->
+              <div id="bulkActionsBar" class="hidden px-4 py-2.5 bg-blue-50/90 border-b border-blue-200 flex flex-wrap items-center justify-between gap-2 text-xs animate-in fade-in duration-100">
+                <div class="flex items-center gap-2 text-blue-900 font-semibold">
+                  <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+                  <span id="bulkSelectedCountText">0 selected</span>
+                </div>
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <span class="text-[11px] text-blue-800 font-medium mr-1">Bulk Status:</span>
+                  <button type="button" onclick="handleBulkStatusUpdate('in_review')" class="px-2.5 py-1 rounded bg-white hover:bg-amber-50 text-amber-900 font-medium border border-amber-200 shadow-xs transition-colors">
+                    Mark In Review
+                  </button>
+                  <button type="button" onclick="handleBulkStatusUpdate('confirmed')" class="px-2.5 py-1 rounded bg-white hover:bg-rose-50 text-rose-900 font-medium border border-rose-200 shadow-xs transition-colors">
+                    Mark Confirmed
+                  </button>
+                  <button type="button" onclick="handleBulkStatusUpdate('dismissed')" class="px-2.5 py-1 rounded bg-white hover:bg-slate-100 text-slate-700 font-medium border border-slate-200 shadow-xs transition-colors">
+                    Mark Dismissed
+                  </button>
+                  <button type="button" onclick="clearRowSelection()" class="px-2 py-1 text-slate-500 hover:text-slate-800 text-[11px] font-medium underline ml-1">
+                    Clear Selection
+                  </button>
+                </div>
+              </div>
+
+              <!-- Findings Data Table -->
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs" aria-label="Detected Impersonation Findings">
+                  <thead class="bg-slate-50/80 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-semibold">
+                    <tr>
+                      <th class="py-3 px-3 w-10 text-center">
+                        <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer">
+                      </th>
+                      <th class="py-3 px-3">Target Asset / Handle</th>
+                      <th class="py-3 px-3">Platform</th>
+                      <th class="py-3 px-3">Risk Level</th>
+                      <th class="py-3 px-3">Infringement Type</th>
+                      <th class="py-3 px-3">Match Score</th>
+                      <th class="py-3 px-3">Status</th>
+                      <th class="py-3 px-3 text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="findingsTableBody" class="divide-y divide-slate-100 font-medium">
+                    <!-- Populated dynamically by JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Table Footer with Pagination Controls -->
+              <div class="p-3 border-t border-slate-100 bg-slate-50/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+                <div class="flex items-center gap-3">
+                  <div id="tableRecordCountText">Showing 0 findings</div>
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-[11px] text-slate-400">Per page:</span>
+                    <select id="perPageSelect" onchange="handlePerPageChange(this.value)" class="py-0.5 px-2 bg-white border border-slate-300 rounded text-xs text-slate-700 focus:outline-none cursor-pointer">
+                      <option value="10">10</option>
+                      <option value="25">25</option>
+                      <option value="50">50</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button id="btnPrevPage" type="button" onclick="goToPrevPage()" class="px-2.5 py-1 rounded bg-white border border-slate-300 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium text-slate-700 transition-colors shadow-xs">
+                    Previous
+                  </button>
+                  <span id="pageIndicatorText" class="text-xs font-semibold text-slate-700 px-1">Page 1 of 1</span>
+                  <button id="btnNextPage" type="button" onclick="goToNextPage()" class="px-2.5 py-1 rounded bg-white border border-slate-300 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed font-medium text-slate-700 transition-colors shadow-xs">
+                    Next
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- SELECTED-RESULT EVIDENCE CARD -->
+            <div id="evidenceCard" class="bg-white rounded-xl border border-slate-200/90 p-5 card-shadow transition-all space-y-4" aria-labelledby="evidenceCardTitle">
+              
+              <!-- Evidence Card Header -->
+              <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 border-b border-slate-100 pb-4">
+                <div>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-rose-100 text-rose-800" id="evidenceRiskPill">
+                      Critical Risk (96/100)
+                    </span>
+                    <span class="text-xs text-slate-500 font-medium" id="evidencePlatformBadge">
+                      Instagram Graph API Telemetry
+                    </span>
+                  </div>
+                  <h3 id="evidenceCardTitle" class="text-lg font-bold text-slate-900 mt-1 flex items-center gap-2 flex-wrap">
+                    <span id="evidenceTargetName">@northstar_official_sale</span>
+                    <span id="evidenceStatusBadge" class="text-xs font-semibold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200">
+                      Flagged
+                    </span>
+                  </h3>
+                  <!-- Clickable Source Link -->
+                  <div class="mt-1 flex items-center gap-2">
+                    <a id="evidenceSourceLink" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 font-semibold hover:underline">
+                      <span id="evidenceSourceLinkText">Inspect External Source Listing</span>
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Takedown & Whitelist Actions -->
+                <div class="flex items-center gap-2 shrink-0">
+                  <button 
+                    type="button"
+                    onclick="handleWhitelistFinding()" 
+                    class="px-3 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium text-xs transition-colors"
+                  >
+                    Whitelist Asset
+                  </button>
+                  <button 
+                    type="button"
+                    onclick="handleSimulateTakedown()" 
+                    class="px-3.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs shadow-sm shadow-rose-600/30 transition-colors flex items-center gap-1.5"
+                  >
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    <span>Simulate Takedown</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Side-by-Side Asset Comparison Grid -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                <!-- Target Impersonator Card -->
+                <div class="p-3.5 rounded-xl border border-rose-200 bg-rose-50/30 space-y-2.5">
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="font-bold text-rose-900 flex items-center gap-1.5">
+                      <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                      Detected Candidate (Suspect)
+                    </span>
+                    <span class="text-[10px] bg-rose-100 text-rose-800 px-1.5 py-0.5 rounded font-mono font-semibold" id="evidenceMatchScore">98% Match</span>
+                  </div>
+
+                  <div class="flex items-center gap-3 bg-white p-2.5 rounded-lg border border-rose-100 shadow-xs">
+                    <div class="w-12 h-12 rounded-lg bg-slate-900 flex items-center justify-center text-white shrink-0 relative overflow-hidden border border-rose-300">
+                      <!-- Impersonator Emblem -->
+                      <svg class="w-7 h-7 text-sky-400 opacity-90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 6.9 7.1.3-5.5 4.6 1.8 7-5.8-4.1-5.8 4.1 1.8-7-5.5-4.6 7.1-.3z"/></svg>
+                      <span class="absolute bottom-0 inset-x-0 bg-rose-600 text-[8px] text-white font-bold text-center">FAKE</span>
+                    </div>
+                    <div class="min-w-0">
+                      <div class="font-bold text-slate-900 text-xs truncate" id="evidenceTargetHandle">@northstar_official_sale</div>
+                      <div class="text-[11px] text-slate-500 truncate" id="evidenceTargetAudience">14.2K followers (High engagement)</div>
+                      <div class="text-[10px] text-rose-700 font-medium truncate" id="evidenceTargetAge">Created recently</div>
+                    </div>
+                  </div>
+
+                  <div class="text-[11px] text-slate-600 space-y-1">
+                    <div class="font-semibold text-slate-700">Identified Violations & Evidence:</div>
+                    <ul class="list-disc list-inside space-y-0.5 text-rose-900" id="evidenceViolationsList">
+                      <!-- Violations populated via JS -->
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Official Northstar Counterpart Card -->
+                <div class="p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/30 space-y-2.5">
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="font-bold text-emerald-900 flex items-center gap-1.5">
+                      <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                      Official Northstar Brand Asset
+                    </span>
+                    <span class="text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-mono font-semibold">Registered IP</span>
+                  </div>
+
+                  <div class="flex items-center gap-3 bg-white p-2.5 rounded-lg border border-emerald-100 shadow-xs">
+                    <div class="w-12 h-12 rounded-lg bg-navy-900 flex items-center justify-center text-white shrink-0 relative overflow-hidden border border-emerald-300">
+                      <!-- Official Emblem -->
+                      <svg class="w-7 h-7 text-sky-400 brand-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 6.9 7.1.3-5.5 4.6 1.8 7-5.8-4.1-5.8 4.1 1.8-7-5.5-4.6 7.1-.3z"/></svg>
+                      <span class="absolute bottom-0 inset-x-0 bg-emerald-600 text-[8px] text-white font-bold text-center">OFFICIAL</span>
+                    </div>
+                    <div class="min-w-0">
+                      <div class="font-bold text-slate-900 text-xs flex items-center gap-1">
+                        <span id="evidenceOfficialHandle">@northstar_tech</span>
+                        <svg class="w-3.5 h-3.5 text-blue-500 fill-blue-500 shrink-0" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                      </div>
+                      <div class="text-[11px] text-slate-500 truncate" id="evidenceOfficialAudience">248K verified enterprise followers</div>
+                      <div class="text-[10px] text-emerald-700 font-medium">Whitelisted Official Counterpart</div>
+                    </div>
+                  </div>
+
+                  <!-- MANDATORY OFFICIAL IDENTITY SAFETY DISCLAIMER -->
+                  <div class="p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-start gap-2">
+                    <svg class="w-4 h-4 text-amber-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    <span class="leading-snug"><strong>Security Notice:</strong> An official identity match does not guarantee account safety. Registered accounts remain susceptible to credential compromise and unauthorized delegation.</span>
+                  </div>
+
+                  <div class="text-[11px] text-slate-600 space-y-1">
+                    <div class="font-semibold text-slate-700">Protected Legal IP:</div>
+                    <div class="text-[11px] text-slate-700 bg-white p-2 rounded border border-slate-200">
+                      Registered Trademark: <span class="font-bold text-slate-900">Northstar®</span> (Reg #6,128,401)<br>
+                      Assigned Class: <span class="text-slate-600">IC 009 (Software), IC 042 (Cloud Security)</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- ASSESSMENT EXPLANATION & MISSING-EVIDENCE BOX -->
+              <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2.5 text-xs">
+                <div>
+                  <span class="text-slate-500 font-semibold text-[10px] uppercase tracking-wider block">Assessment Rationale</span>
+                  <p id="evidenceAssessmentExplanation" class="text-slate-800 text-xs mt-0.5 font-medium leading-relaxed">
+                    Corroborating signals established high impersonation probability.
+                  </p>
+                </div>
+                
+                <div id="evidenceCorroboratingBox" class="space-y-1">
+                  <span class="text-slate-500 font-semibold text-[10px] uppercase tracking-wider block">Corroborating Signals</span>
+                  <ul id="evidenceCorroboratingSignalsList" class="list-disc list-inside text-slate-700 space-y-0.5">
+                    <!-- Populated via JS -->
+                  </ul>
+                </div>
+
+                <!-- Missing-Evidence Notice -->
+                <div class="p-2.5 rounded-lg bg-amber-50/80 border border-amber-200 text-amber-900 text-[11px] flex items-start gap-2" id="evidenceMissingEvidenceBox">
+                  <svg class="w-4 h-4 text-amber-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span id="evidenceMissingEvidenceNotice">Missing-evidence notice: Automated logo image comparison was not performed; visual likeness is unverified without image analysis.</span>
+                </div>
+              </div>
+
+              <!-- Technical Forensic Details Grid -->
+              <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                <div>
+                  <span class="text-slate-400 font-semibold block text-[10px] uppercase">Similarity Vectors</span>
+                  <span class="font-bold text-slate-800" id="evidenceVectorStats">98.4% String • High Levenshtein</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 font-semibold block text-[10px] uppercase">Host / Telemetry</span>
+                  <span class="font-bold text-slate-800 truncate block" id="evidenceHostTelemetry">Direct API telemetry</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 font-semibold block text-[10px] uppercase">Recommended Action</span>
+                  <span class="font-bold text-rose-700" id="evidenceRecommendedAction">Immediate Cease & Desist / DMCA</span>
+                </div>
+              </div>
+
+              <!-- ANALYST REVIEW & DECISION PANEL -->
+              <div class="p-4 rounded-xl border border-slate-200 bg-white space-y-3 text-xs" id="evidenceReviewPanel">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                  <span class="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                    Analyst Review Decision & Notes
+                  </span>
+                  <span class="text-[11px] text-slate-400 font-mono">Audit Log Enforced</span>
+                </div>
+
+                <!-- Review Verdict Choices -->
+                <div>
+                  <label class="block text-slate-700 font-semibold mb-1.5 text-[11px]">Select Review State:</label>
+                  <div class="flex flex-wrap items-center gap-2" id="verdictButtonContainer">
+                    <button type="button" onclick="setReviewVerdictChoice('new')" id="btnVerdict-new" class="verdict-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 transition-all">
+                      New
+                    </button>
+                    <button type="button" onclick="setReviewVerdictChoice('in_review')" id="btnVerdict-in_review" class="verdict-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-amber-300 bg-amber-50 text-amber-800 hover:bg-amber-100 transition-all ring-2 ring-amber-400/50">
+                      In review
+                    </button>
+                    <button type="button" onclick="setReviewVerdictChoice('confirmed')" id="btnVerdict-confirmed" class="verdict-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-rose-300 bg-rose-50 text-rose-800 hover:bg-rose-100 transition-all">
+                      Confirmed
+                    </button>
+                    <button type="button" onclick="setReviewVerdictChoice('dismissed')" id="btnVerdict-dismissed" class="verdict-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-300 bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all">
+                      Dismissed
+                    </button>
+                    <button type="button" onclick="setReviewVerdictChoice('whitelisted')" id="btnVerdict-whitelisted" class="verdict-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-emerald-300 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 transition-all">
+                      Whitelisted
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Analyst Notes Textarea -->
+                <div>
+                  <label for="evidenceAnalystNotes" class="block text-slate-700 font-semibold mb-1 text-[11px]">Analyst Investigation Notes:</label>
+                  <textarea id="evidenceAnalystNotes" rows="2" placeholder="Record investigation findings, threat attribution, or rationale for this review decision..." class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"></textarea>
+                </div>
+
+                <!-- Save Review Action -->
+                <div class="flex items-center justify-between pt-1">
+                  <span class="text-[11px] text-slate-500" id="currentReviewerInfo">Reviewing as: Analyst</span>
+                  <button type="button" id="btnSaveReview" onclick="submitCurrentReview()" class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-xs transition-colors flex items-center gap-1.5">
+                    <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <span>Save Review Decision</span>
+                  </button>
+                </div>
+
+                <!-- Persistent Review History Timeline -->
+                <div class="pt-3 border-t border-slate-100">
+                  <span class="text-slate-500 font-semibold text-[10px] uppercase tracking-wider block mb-2">Persistent Review History</span>
+                  <div id="evidenceReviewHistoryList" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                    <!-- Populated via JS -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Evidence Disclaimer -->
+              <div class="text-[11px] text-slate-500 italic">
+                * Forensic evidence compiled from authorized connector feeds and verified official trademark registry.
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN: “Connect a data source” Panel (xl:col-span-4) -->
+          <div class="xl:col-span-4 space-y-6">
+
+            <!-- "Connect a data source" Panel -->
+            <div class="bg-white rounded-xl border border-slate-200/90 card-shadow overflow-hidden">
+              
+              <!-- Panel Header -->
+              <div class="p-4 border-b border-slate-200/80 bg-slate-50/60">
+                <div class="flex items-center justify-between">
+                  <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                    <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                    <span>Connect a data source</span>
+                  </h3>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">
+                    6 Connectors
+                  </span>
+                </div>
+                <p class="text-xs text-slate-500 mt-1 leading-normal">
+                  Configure real-time monitoring channels for unauthorized handle squatting and app piracy.
+                </p>
+              </div>
+
+              <!-- Data Sources List -->
+              <div class="p-3.5 space-y-2.5" id="dataSourcesList">
+                <!-- Dynamically populated via JS from sample_data.json -->
+              </div>
+
+              <!-- Quick Connect Modal Trigger Button -->
+              <div class="p-3.5 border-t border-slate-100 bg-slate-50/40">
+                <button 
+                  onclick="openDataSourceModal()" 
+                  class="w-full py-2 px-3 rounded-lg border-2 border-dashed border-slate-300 hover:border-blue-500 hover:bg-blue-50/40 text-slate-600 hover:text-blue-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                  <span>Connect Custom Feed (Sandbox)</span>
+                </button>
+
+                <div class="mt-2.5 p-2 rounded-lg bg-blue-50/60 border border-blue-100 text-[11px] text-blue-800 flex items-start gap-2">
+                  <svg class="w-4 h-4 text-blue-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span><strong>Demo Safety:</strong> Connectors use mock tokens. No production credentials or API keys are required or stored.</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Brand Assets Quick Registry Card -->
+            <div class="bg-white rounded-xl border border-slate-200/90 p-4 card-shadow text-xs space-y-3">
+              <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                <span class="font-bold text-slate-900">Protected Trademarks</span>
+                <span class="text-[11px] text-blue-600 font-semibold cursor-pointer hover:underline" onclick="switchNav('brand-profile', event)">View All</span>
+              </div>
+              <div class="flex flex-wrap gap-1.5" id="quickTrademarksList">
+                <span class="px-2 py-1 rounded bg-slate-100 text-slate-800 font-mono text-[11px] font-semibold border border-slate-200">Northstar®</span>
+                <span class="px-2 py-1 rounded bg-slate-100 text-slate-800 font-mono text-[11px] font-semibold border border-slate-200">Northstar Sentinel™</span>
+                <span class="px-2 py-1 rounded bg-slate-100 text-slate-800 font-mono text-[11px] font-semibold border border-slate-200">StarGuard™</span>
+                <span class="px-2 py-1 rounded bg-slate-100 text-slate-800 font-mono text-[11px] font-semibold border border-slate-200">TrueVerify™</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </main>
+
+      <!-- VIEW 2: BRAND PROFILE (Secondary Navigation View) -->
+      <section id="view-brand-profile" class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-7 space-y-6 hidden">
+        <div class="border-b border-slate-200 pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 class="text-2xl font-extrabold text-slate-900">Brand Profile & IP Registry</h1>
+            <p class="text-sm text-slate-600 mt-1">
+              Organization-scoped legal identity, protected aliases, and exact source-scoped official assets.
+            </p>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <button onclick="openEditBrandModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 shadow-xs transition-colors">
+              <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+              <span>Edit Brand Details</span>
+            </button>
+            <button onclick="openAddBrandModal()" id="addBrandBtn" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 shadow-xs transition-colors">
+              <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              <span>Add Brand</span>
+            </button>
+            <button onclick="openAddAssetModal('domain')" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-colors">
+              <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              <span>Add Official Asset</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Brand Identity & Metadata Card -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 card-shadow space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+            <div class="flex items-center gap-3.5">
+              <div class="w-12 h-12 rounded-xl bg-navy-900 border border-slate-200 flex items-center justify-center text-white shrink-0 shadow-sm">
+                <svg class="w-7 h-7 text-sky-400 brand-star" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2l2.4 6.9 7.1.3-5.5 4.6 1.8 7-5.8-4.1-5.8 4.1 1.8-7-5.5-4.6 7.1-.3z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h2 class="text-lg font-bold text-slate-900" id="brandProfileTitle">Northstar Technologies</h2>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 uppercase tracking-wider">Protected Brand</span>
+                </div>
+                <div class="text-xs text-slate-500 flex items-center gap-2 mt-0.5">
+                  <span id="brandProfileIndustry">Enterprise Cloud & Cybersecurity</span>
+                  <span>•</span>
+                  <span class="text-slate-400">Org: <code class="text-slate-600 bg-slate-100 px-1 py-0.5 rounded" id="brandProfileOrgId">org-northstar-fictional</code></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Identity Matching Security Badge -->
+            <div class="p-2.5 rounded-lg bg-blue-50/70 border border-blue-200 text-blue-900 text-xs flex items-center gap-2">
+              <svg class="w-4 h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              <span class="text-[11px] leading-tight"><strong>Rule Enforced:</strong> Exact source-scoped identifiers required. Never verifies official identity from logo or name alone.</span>
+            </div>
+          </div>
+
+          <!-- Brand Aliases -->
+          <div>
+            <span class="text-xs font-semibold text-slate-700 block mb-1.5">Registered Brand Aliases & Monitored Strings:</span>
+            <div class="flex flex-wrap gap-2" id="brandProfileAliasesList">
+              <!-- Populated dynamically via JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Columns for Official Assets -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Column 1: Official Domains -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 card-shadow space-y-3 flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+              <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+                <span>Official Domains</span>
+              </h3>
+              <button onclick="openAddAssetModal('domain')" class="text-xs text-blue-600 font-semibold hover:underline">+ Add Domain</button>
+            </div>
+            <div class="space-y-2 text-xs flex-1" id="brandProfileDomainsList">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+
+          <!-- Column 2: Official Social Accounts (with stable IDs) -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 card-shadow space-y-3 flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+              <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/></svg>
+                <span>Official Social Accounts</span>
+              </h3>
+              <button onclick="openAddAssetModal('social_account')" class="text-xs text-blue-600 font-semibold hover:underline">+ Add Channel</button>
+            </div>
+            <div class="space-y-2 text-xs flex-1" id="brandProfileHandlesList">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+
+          <!-- Column 3: Official Mobile Apps (with package & publisher IDs) -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 card-shadow space-y-3 flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+              <h3 class="font-bold text-slate-900 text-sm flex items-center gap-2">
+                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                <span>Official Mobile Apps</span>
+              </h3>
+              <button onclick="openAddAssetModal('mobile_app')" class="text-xs text-blue-600 font-semibold hover:underline">+ Add App</button>
+            </div>
+            <div class="space-y-2 text-xs flex-1" id="brandProfileAppsList">
+              <!-- Populated via JS -->
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- VIEW 3: API CONNECTIONS (Platform Catalog & Multi-Source Hub) -->
+      <section id="view-api-connections" class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-7 space-y-7 hidden">
+        
+        <!-- Header -->
+        <div class="border-b border-slate-200 pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-blue-100 text-blue-800 tracking-wide uppercase">
+                Platform Catalog
+              </span>
+              <span class="text-xs text-slate-500 font-medium">Multi-Platform Integration Hub</span>
+            </div>
+            <h1 class="text-2xl font-extrabold text-slate-900 mt-1">Platform API Connections</h1>
+            <p class="text-sm text-slate-600 mt-1 max-w-2xl">
+              Configure and manage threat discovery connectors across social networks, messaging protocols, and app stores. Encrypted at rest via managed vault keys with zero client-side credential exposure.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="renderApiConnectionsView()" class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 shadow-xs transition-colors">
+              <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              <span>Refresh Status</span>
+            </button>
+            <button onclick="openCreateConnectionModal()" class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-500/30 transition-colors">
+              <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              <span>Add Connection</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Section 1: Active & Implemented Platform Adapters -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                <span>Implemented Monitoring Platforms</span>
+                <span class="px-2 py-0.5 rounded-full text-[11px] bg-emerald-100 text-emerald-800 font-semibold" id="activeAdapterCountBadge">5 Available</span>
+              </h2>
+              <p class="text-xs text-slate-500 mt-0.5">
+                Verified server-side adapters with honest telemetry boundaries and rate-limit handling.
+              </p>
+            </div>
+            <span class="text-xs text-slate-500 hidden sm:inline">Active Telemetry Streams</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="implementedCatalogGrid">
+            <!-- Rendered dynamically by JS from catalog API -->
+          </div>
+        </div>
+
+        <!-- Section 2: Coming Later Section -->
+        <div class="space-y-4 pt-6 border-t border-slate-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                <span>Coming Later</span>
+                <span class="px-2 py-0.5 rounded-full text-[11px] bg-slate-100 text-slate-700 font-semibold">Scheduled for Future Phases</span>
+              </h2>
+              <p class="text-xs text-slate-500 mt-0.5">
+                Platforms pending official developer app verification and commercial API agreements. Strictly labeled as unavailable for live scans.
+              </p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="comingLaterCatalogGrid">
+            <!-- Rendered dynamically by JS -->
+          </div>
+        </div>
+
+        <!-- Legacy container alias -->
+        <div id="expandedApiGrid" class="hidden"></div>
+
+      </section>
+
+      <!-- VIEW: DATA SOURCES (Recreated View Matching Reference Image) -->
+      <section id="view-data-sources" class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-7 space-y-6 hidden">
+        
+        <!-- Header -->
+        <div class="border-b border-slate-200/80 pb-4">
+          <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
+            Connect Your Data
+          </h1>
+          <p class="text-sm text-slate-600 mt-1">
+            Manage your data sources and prepare datasets for analysis.
+          </p>
+        </div>
+
+        <!-- Two Top Cards: YouTube & Website Phishing Dataset -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          
+          <!-- Card 1: YouTube -->
+          <div class="bg-white rounded-xl border border-slate-200/90 p-5 card-shadow flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 shrink-0">
+                    <svg class="w-5 h-5 text-rose-600" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                  </div>
+                  <h3 class="text-base font-bold text-slate-900">YouTube</h3>
+                </div>
+                <span id="dataSourcesYtBadge" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                  <span id="dataSourcesYtStatusText">Existing API connection</span>
+                </span>
+              </div>
+              <p class="text-xs text-slate-500" id="dataSourcesYtDescText">
+                Continue using your saved API key.
+              </p>
+            </div>
+            <div>
+              <button 
+                type="button" 
+                onclick="switchNav('api-connections')" 
+                class="w-full py-2.5 px-4 rounded-lg border border-blue-600 text-blue-600 font-semibold text-xs hover:bg-blue-50 transition-colors flex items-center justify-center gap-1.5"
+              >
+                <span>Manage connection</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 2: Website Phishing Dataset -->
+          <div class="bg-white rounded-xl border border-slate-200/90 p-5 card-shadow flex flex-col justify-between space-y-4">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-700 shrink-0">
+                    <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                  </div>
+                  <h3 class="text-base font-bold text-slate-900">Website phishing dataset</h3>
+                </div>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-100 text-sky-700">
+                  CSV import
+                </span>
+              </div>
+              
+              <!-- File selector info -->
+              <div class="flex items-center justify-between text-xs">
+                <div class="flex items-center gap-1.5 min-w-0">
+                  <span class="text-slate-400 font-medium">Source:</span>
+                  <span id="selectedDatasetFileName" class="font-mono text-slate-700 truncate" title="PhiUSIIL_Phishing_URL_Dataset.csv">PhiUSIIL_Phishing_URL_Dataset.csv</span>
+                </div>
+                <button type="button" onclick="document.getElementById('datasetFileInput').click()" class="text-blue-600 hover:underline font-semibold shrink-0 ml-2">
+                  Choose file
+                </button>
+              </div>
+              <input type="file" id="datasetFileInput" accept=".csv" class="hidden" onchange="handleDatasetFileChosen(event)">
+            </div>
+
+            <!-- Action buttons -->
+            <div class="flex flex-col sm:flex-row items-center gap-3 pt-1">
+              <button 
+                type="button" 
+                id="validateImportBtn"
+                onclick="handleImportDataset()" 
+                class="w-full sm:flex-1 py-2.5 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-sm transition-colors flex items-center justify-center gap-1.5"
+              >
+                <svg id="validateImportSpinner" class="hidden w-3.5 h-3.5 animate-spin text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <span id="validateImportText">Validate & Import</span>
+              </button>
+              <button 
+                type="button" 
+                id="trainModelBtn"
+                onclick="handleStartTraining()" 
+                class="w-full sm:flex-1 py-2.5 px-4 rounded-lg border border-blue-600 text-blue-600 font-semibold text-xs hover:bg-blue-50 transition-colors flex items-center justify-center gap-1.5"
+              >
+                <svg id="trainModelSpinner" class="hidden w-3.5 h-3.5 animate-spin text-blue-600" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <span id="trainModelText">Train Model</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dataset Summary Card -->
+        <div class="bg-white rounded-xl border border-slate-200/90 p-5 card-shadow space-y-4">
+          <h2 class="text-sm font-bold text-slate-800">Dataset summary</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
+            <!-- Metric 1: Source rows -->
+            <div class="pt-3 sm:pt-0 sm:px-4 first:px-0">
+              <div id="statSourceRows" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">235,795</div>
+              <div class="text-xs font-medium text-slate-500 mt-0.5">source rows</div>
+            </div>
+
+            <!-- Metric 2: Repeated URL values -->
+            <div class="pt-3 sm:pt-0 sm:px-4">
+              <div id="statRepeatedUrls" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">425</div>
+              <div class="text-xs font-medium text-slate-500 mt-0.5">repeated URL values</div>
+            </div>
+
+            <!-- Metric 3: Model Status -->
+            <div class="pt-3 sm:pt-0 sm:px-4 flex flex-col justify-center">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-medium text-slate-500">Model status:</span>
+                <span id="statModelStatusBadge" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
+                  Training required
+                </span>
+              </div>
+              <div id="activeModelVersionText" class="text-[11px] font-mono text-slate-400 mt-1">No active model loaded</div>
+            </div>
+          </div>
+
+          <!-- Training Progress Bar (shows during training) -->
+          <div id="trainingProgressContainer" class="hidden pt-3 border-t border-slate-100 space-y-1.5">
+            <div class="flex items-center justify-between text-xs">
+              <span id="trainingStageText" class="font-semibold text-blue-700">Training pipeline initializing...</span>
+              <span id="trainingPercentText" class="font-mono font-bold text-slate-700">0%</span>
+            </div>
+            <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+              <div id="trainingProgressBar" class="bg-gradient-to-r from-blue-600 to-sky-400 h-full w-[0%] transition-all duration-300"></div>
+            </div>
+          </div>
+
+          <!-- Evaluation Summary (shows when model is ready) -->
+          <div id="modelMetricsSummaryContainer" class="hidden pt-3 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
+            <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+              <div class="text-slate-400 text-[10px] uppercase font-bold">Accuracy</div>
+              <div id="metricAccuracy" class="text-base font-extrabold text-slate-900 mt-0.5">--</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+              <div class="text-slate-400 text-[10px] uppercase font-bold">Phishing Recall</div>
+              <div id="metricRecall" class="text-base font-extrabold text-slate-900 mt-0.5">--</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+              <div class="text-slate-400 text-[10px] uppercase font-bold">Macro F1</div>
+              <div id="metricMacroF1" class="text-base font-extrabold text-slate-900 mt-0.5">--</div>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+              <div class="text-slate-400 text-[10px] uppercase font-bold">False Positive Rate</div>
+              <div id="metricFpr" class="text-base font-extrabold text-slate-900 mt-0.5">--</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Imported Data Preview Card -->
+        <div class="bg-white rounded-xl border border-slate-200/90 p-5 card-shadow space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-sm font-bold text-slate-800">Imported data preview</h2>
+            <span id="previewRecordCount" class="text-xs text-slate-500 font-mono">0 rows</span>
+          </div>
+
+          <div class="overflow-x-auto border border-slate-200/80 rounded-lg">
+            <table class="w-full text-left text-xs text-slate-700">
+              <thead class="bg-slate-50 text-[11px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-200/80">
+                <tr>
+                  <th scope="col" class="px-4 py-3">URL</th>
+                  <th scope="col" class="px-4 py-3 w-48">Domain</th>
+                  <th scope="col" class="px-4 py-3 w-36">Dataset label</th>
+                </tr>
+              </thead>
+              <tbody id="datasetPreviewTableBody" class="divide-y divide-slate-100">
+                <tr id="datasetPreviewEmptyRow">
+                  <td colspan="3" class="px-4 py-12 text-center text-slate-400">
+                    <div class="flex flex-col items-center justify-center gap-2">
+                      <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                      <span class="text-xs font-medium">Imported rows appear here.</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Preview Pagination Controls -->
+          <div id="previewPaginationContainer" class="hidden flex items-center justify-between pt-2">
+            <div class="text-xs text-slate-500" id="previewPageInfo">
+              Showing page 1
+            </div>
+            <div class="flex items-center gap-2">
+              <button 
+                type="button" 
+                id="previewPrevBtn" 
+                onclick="handlePreviewPageChange(-1)"
+                class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 disabled:opacity-50 transition-colors"
+              >
+                Previous
+              </button>
+              <button 
+                type="button" 
+                id="previewNextBtn" 
+                onclick="handlePreviewPageChange(1)"
+                class="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 disabled:opacity-50 transition-colors"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- VIEW 4: REPORTS (Secondary Navigation View) -->
+      <section id="view-reports" class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-7 space-y-6 hidden">
+        <div class="border-b border-slate-200 pb-4 flex items-center justify-between">
+          <div>
+            <h1 class="text-2xl font-extrabold text-slate-900">Brand Protection Reports</h1>
+            <p class="text-sm text-slate-600 mt-1">
+              Executive threat intelligence summary and remediation analytics.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="exportData('summary', 'csv')" class="px-3.5 py-2 rounded-lg bg-slate-900 text-white font-semibold text-xs hover:bg-slate-800 transition-colors shadow-xs flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              <span>Export Summary (CSV)</span>
+            </button>
+            <button onclick="exportData('telemetry', 'csv')" class="px-3.5 py-2 rounded-lg border border-slate-300 bg-white text-slate-700 font-semibold text-xs hover:bg-slate-50 transition-colors shadow-xs flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              <span>Export Telemetry (CSV)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Metrics cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white p-4 rounded-xl border border-slate-200 card-shadow">
+            <span class="text-slate-400 font-semibold text-xs uppercase">Total Scans Run</span>
+            <div class="text-2xl font-extrabold text-slate-900 mt-1" id="reportMetricTotalScans">1,248</div>
+            <span class="text-[11px] text-emerald-600 font-medium">+14% this month</span>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-slate-200 card-shadow">
+            <span class="text-slate-400 font-semibold text-xs uppercase">Impersonators Flagged</span>
+            <div class="text-2xl font-extrabold text-rose-600 mt-1" id="reportMetricFlagged">8 Active</div>
+            <span class="text-[11px] text-rose-600 font-medium">Under active review</span>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-slate-200 card-shadow">
+            <span class="text-slate-400 font-semibold text-xs uppercase">Takedown Success Rate</span>
+            <div class="text-2xl font-extrabold text-emerald-600 mt-1">94.2%</div>
+            <span class="text-[11px] text-slate-500 font-medium">Platform verified</span>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-slate-200 card-shadow">
+            <span class="text-slate-400 font-semibold text-xs uppercase">Avg Remediation Time</span>
+            <div class="text-2xl font-extrabold text-blue-600 mt-1">4.2 Hours</div>
+            <span class="text-[11px] text-blue-600 font-medium">Platform turnaround</span>
+          </div>
+        </div>
+
+        <!-- Download Center Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-4 rounded-xl border border-slate-200 bg-white card-shadow space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="font-bold text-slate-900 text-sm">Executive Threat Summary</h3>
+              <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-50 text-blue-800">Viewer, Analyst, Admin</span>
+            </div>
+            <p class="text-xs text-slate-500">Aggregated breakdown of brand infringement risks, status counts, and legal asset posture.</p>
+            <div class="flex items-center gap-2 pt-1">
+              <button onclick="exportData('summary', 'csv')" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs">Download CSV</button>
+              <button onclick="exportData('summary', 'json')" class="px-3 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs">Download JSON</button>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl border border-slate-200 bg-white card-shadow space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="font-bold text-slate-900 text-sm">Full Forensic Telemetry</h3>
+              <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-rose-50 text-rose-800 border border-rose-200">Analyst, Admin, Owner Only</span>
+            </div>
+            <p class="text-xs text-slate-500">Raw candidate records, technical evidence, formula-injection sanitized forensic attributes, and audit timestamps.</p>
+            <div class="flex items-center gap-2 pt-1">
+              <button onclick="exportData('telemetry', 'csv')" class="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs">Download CSV</button>
+              <button onclick="exportData('telemetry', 'json')" class="px-3 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs">Download JSON</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+  </div>
+
+  <!-- MODAL: Manage Source Connection & Encrypted Credentials -->
+  <div id="dataSourceModal" class="fixed inset-0 z-50 modal-backdrop hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      
+      <!-- Modal Header -->
+      <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
+        <div class="flex items-center gap-3">
+          <div id="modalSourceIconContainer" class="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
+            <!-- Icon dynamically inserted -->
+          </div>
+          <div>
+            <h3 id="modalSourceTitle" class="font-bold text-slate-900 text-base">Configure Source Connector</h3>
+            <p id="modalSourceSubtitle" class="text-xs text-slate-500">Live Server-Side Telemetry Integration</p>
+          </div>
+        </div>
+        <button onclick="closeDataSourceModal()" class="text-slate-400 hover:text-slate-700 p-1 rounded-md" aria-label="Close Modal">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-5 space-y-4 text-xs max-h-[80vh] overflow-y-auto">
+        
+        <!-- Status Card -->
+        <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="font-semibold text-slate-700">Connection Status:</span>
+            <span id="modalSourceStatusBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold">
+              <!-- e.g. Connected or Unconfigured -->
+            </span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/60 text-[11px]">
+            <div>
+              <span class="text-slate-400 font-medium block">Key Source:</span>
+              <span id="modalSourceKeySource" class="font-semibold text-slate-800">None</span>
+            </div>
+            <div>
+              <span class="text-slate-400 font-medium block">Last Verified:</span>
+              <span id="modalSourceLastTested" class="font-semibold text-slate-800">Never</span>
+            </div>
+          </div>
+
+          <div id="modalSourceMessageBanner" class="p-2.5 rounded-lg text-[11px] bg-blue-50 border border-blue-200 text-blue-900 leading-normal">
+            <!-- Status message -->
+          </div>
+        </div>
+
+        <!-- Security / Architecture Notice -->
+        <div class="p-3 rounded-lg bg-slate-900 text-slate-100 space-y-1 text-[11px]">
+          <div class="flex items-center gap-1.5 font-bold text-sky-400">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            <span>Managed Credential Vault & Zero Browser Exposure</span>
+          </div>
+          <p class="text-slate-300 leading-relaxed">
+            Stored credentials are encrypted with a managed encryption key kept separately from the database. Saved secrets are never returned to the browser.
+          </p>
+        </div>
+
+        <!-- Form for Supplying / Replacing Key -->
+        <form id="sourceCredentialForm" onsubmit="handleSaveSourceCredentials(event)" class="space-y-3.5">
+          <input type="hidden" id="modalActiveSourceId" value="">
+
+          <div id="modalKeyInputSection">
+            <label class="block font-semibold text-slate-800 mb-1" for="modalSecretKeyInput">
+              <span id="modalSecretKeyLabel">Provider API Key / Secret</span>
+            </label>
+            <div class="relative">
+              <input 
+                type="password" 
+                id="modalSecretKeyInput" 
+                placeholder="Enter new API key..." 
+                autocomplete="off"
+                oninput="handleCredentialInputChanged()"
+                class="w-full pr-10 p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-mono text-xs focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+              <!-- Eye Toggle: ONLY works for newly typed unsaved input -->
+              <button 
+                type="button" 
+                id="modalToggleVisibilityBtn" 
+                onclick="toggleUnsavedSecretVisibility()" 
+                title="Toggle visibility for newly typed input" 
+                class="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-700 disabled:opacity-40"
+              >
+                <svg id="eyeIconOpen" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                <svg id="eyeIconClosed" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/></svg>
+              </button>
+            </div>
+            <p id="modalSecretKeyHelp" class="text-[11px] text-slate-500 mt-1">
+              Input is automatically cleared after saving. Visibility toggling is only permitted while typing unsaved input.
+            </p>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+            <div>
+              <button 
+                type="button" 
+                id="modalDeleteSecretBtn" 
+                onclick="handleDeleteSourceCredentials()" 
+                class="px-3 py-2 rounded-lg border border-rose-200 text-rose-700 hover:bg-rose-50 font-semibold text-xs transition-colors hidden"
+              >
+                Delete Stored Key
+              </button>
+            </div>
+            <div class="flex items-center gap-2">
+              <button 
+                type="button" 
+                id="modalTestConnectionBtn" 
+                onclick="handleTestLiveConnection()" 
+                class="px-3.5 py-2 rounded-lg border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium text-xs transition-colors"
+              >
+                Test Connection
+              </button>
+              <button 
+                type="submit" 
+                id="modalSaveCredentialsBtn" 
+                class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-sm transition-colors"
+              >
+                Save & Verify
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <!-- Google Play Package Import Section (Visible for google_play only) -->
+        <div id="googlePlayImportSection" class="p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/40 space-y-2.5 hidden">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-emerald-950 text-xs">Structured Developer Package Import</span>
+            <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold">Authorized Import</span>
+          </div>
+          <p class="text-[11px] text-emerald-800 leading-normal">
+            Import official Android package manifests to activate Google Play threat discovery without live API credentials.
+          </p>
+          <textarea 
+            id="googlePlayImportJson" 
+            rows="3" 
+            placeholder='[{"package_name": "com.northstar.mobile", "publisher_id": "pub-northstar-official-9021"}]'
+            class="w-full p-2 bg-white border border-emerald-300 rounded-lg font-mono text-[11px] text-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+          ></textarea>
+          <div class="flex justify-end">
+            <button 
+              type="button" 
+              onclick="handleImportGooglePlayPackages()" 
+              class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg text-xs"
+            >
+              Import Package Manifest
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL: Simulated Scan Execution -->
+  <div id="scanProgressModal" class="fixed inset-0 z-50 modal-backdrop hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl border border-slate-200">
+      <div class="w-14 h-14 rounded-full bg-blue-50 border border-blue-200 mx-auto flex items-center justify-center text-blue-600 relative">
+        <svg class="w-7 h-7 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+      </div>
+      <h3 class="font-bold text-slate-900 text-base mt-4">Scanning Target Source</h3>
+      <p class="text-xs text-slate-500 mt-1" id="scanProgressText">Ingesting target handle into demo sandbox...</p>
+      
+      <div class="w-full bg-slate-100 rounded-full h-2 mt-4 overflow-hidden">
+        <div id="scanProgressBar" class="bg-blue-600 h-full w-[25%] transition-all duration-300"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Dynamic Connector Configuration & Verification -->
+  <div id="connectionConfigModal" class="fixed inset-0 z-50 modal-backdrop hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-xl w-full shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-150 flex flex-col max-h-[90vh]">
+      
+      <!-- Modal Header -->
+      <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
+        <div class="flex items-center gap-3">
+          <div id="dynamicModalIcon" class="w-10 h-10 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
+            <!-- Platform icon -->
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="dynamicModalTitle" class="font-bold text-slate-900 text-base">Configure Platform Connection</h3>
+              <span id="dynamicModalStatusBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold"></span>
+            </div>
+            <p id="dynamicModalSubtitle" class="text-xs text-slate-500">Configure provider credentials, brand scope, and access controls</p>
+          </div>
+        </div>
+        <button onclick="closeConnectionConfigModal()" class="text-slate-400 hover:text-slate-700 p-1 rounded-md" aria-label="Close Modal">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="p-5 space-y-4 text-xs overflow-y-auto flex-1">
+        
+        <!-- Platform Capabilities & Scope Warning Banner -->
+        <div id="dynamicModalLimitsBanner" class="p-3.5 rounded-xl border border-blue-200 bg-blue-50/60 text-blue-900 space-y-2">
+          <div class="font-bold flex items-center gap-1.5 text-blue-950">
+            <svg class="w-4 h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span id="dynamicModalCapabilitiesTitle">Supported Capabilities</span>
+          </div>
+          <div id="dynamicModalCapabilitiesList" class="flex flex-wrap gap-1.5 text-[11px]">
+            <!-- Badges -->
+          </div>
+          <p id="dynamicModalLimitationsText" class="text-[11px] text-blue-800 leading-normal pt-1 border-t border-blue-200/50">
+            <!-- Honesty statement -->
+          </p>
+        </div>
+
+        <!-- Accessible Assets / Granted Permissions (Shown when connected) -->
+        <div id="dynamicModalAccessibleAssetsBox" class="hidden p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/50 space-y-2">
+          <div class="font-bold flex items-center justify-between text-emerald-950">
+            <span id="dynamicModalAssetsHeading">Accessible Assets & Granted Permissions</span>
+            <span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-semibold">Active Scope</span>
+          </div>
+          <div id="dynamicModalAccessibleAssetsContent" class="text-[11px] text-emerald-900 space-y-1">
+            <!-- Dynamic items: chats/channels for Telegram, pages/permissions for Facebook -->
+          </div>
+        </div>
+
+        <!-- Error / Warning Notification Box -->
+        <div id="dynamicModalErrorBox" class="hidden p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs"></div>
+
+        <!-- Connection Configuration Form -->
+        <form id="dynamicConnectionForm" onsubmit="handleSaveDynamicConnection(event)" class="space-y-4">
+          <input type="hidden" id="dynamicModalProviderId" value="">
+          <input type="hidden" id="dynamicModalConnectionId" value="">
+
+          <!-- Platform Selector (Shown when creating new connection without preset provider) -->
+          <div id="dynamicPlatformSelectSection">
+            <label class="block font-semibold text-slate-700 mb-1" for="dynamicPlatformSelect">Select Platform *</label>
+            <select id="dynamicPlatformSelect" onchange="handleDynamicPlatformSelected(this.value)" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="youtube">YouTube (YouTube Data API v3)</option>
+              <option value="telegram">Telegram (Bot API)</option>
+              <option value="facebook">Facebook (Meta Graph OAuth)</option>
+              <option value="google_play">Google Play Store (Developer Console & Import)</option>
+              <option value="apple_app_store">Apple App Store (Public iTunes Search API)</option>
+            </select>
+          </div>
+
+          <!-- Connection Name & Scope -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1" for="dynamicConnectionName">Connection Name *</label>
+              <input type="text" id="dynamicConnectionName" required placeholder="e.g. Regional Telegram Watcher" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1" for="dynamicBrandScope">Brand Scope</label>
+              <select id="dynamicBrandScope" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="all">All Organization Brands</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Dynamic Fields Container (Generated from config_schema) -->
+          <div id="dynamicSchemaFieldsContainer" class="space-y-3 pt-2 border-t border-slate-100">
+            <!-- Schema-driven inputs: bot_token, access_token, api_key, etc. -->
+          </div>
+
+          <!-- Security Callout -->
+          <div class="p-3 rounded-lg bg-slate-900 text-slate-100 space-y-1 text-[11px]">
+            <div class="flex items-center gap-1.5 font-bold text-sky-400">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+              <span>Zero Browser Secret Exposure</span>
+            </div>
+            <p class="text-slate-300 leading-relaxed">
+              Secrets are encrypted with Fernet managed keys. Inputs are cleared immediately upon submission and stored secrets are never echoed back to the browser.
+            </p>
+          </div>
+
+          <!-- Footer Actions -->
+          <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+            <button 
+              type="button" 
+              id="dynamicModalDisconnectBtn" 
+              onclick="handleDisconnectDynamicConnection()" 
+              class="px-3.5 py-2 rounded-lg border border-rose-200 text-rose-700 hover:bg-rose-50 font-semibold text-xs transition-colors hidden"
+            >
+              Disconnect
+            </button>
+            <div class="flex items-center gap-2 ml-auto">
+              <button 
+                type="button" 
+                id="dynamicModalTestBtn" 
+                onclick="handleTestDynamicConnection()" 
+                class="px-3.5 py-2 rounded-lg border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium text-xs transition-colors"
+              >
+                Test Connection
+              </button>
+              <button 
+                type="submit" 
+                id="dynamicModalSaveBtn" 
+                class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs shadow-sm transition-colors"
+              >
+                Save & Verify
+              </button>
+            </div>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Edit Brand Details -->
+  <div id="editBrandModal" class="fixed inset-0 z-50 modal-backdrop hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
+        <div>
+          <h3 class="font-bold text-slate-900 text-base">Edit Brand Profile</h3>
+          <p class="text-xs text-slate-500">Configure brand aliases and identity metadata</p>
+        </div>
+        <button onclick="closeEditBrandModal()" class="text-slate-400 hover:text-slate-700 p-1 rounded-md" aria-label="Close Modal">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <form id="editBrandForm" onsubmit="handleSaveBrandEdits(event)" class="p-5 space-y-4 text-xs">
+        <div id="brandFormError" class="p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 hidden"></div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1" for="editBrandNameInput">Brand Name *</label>
+          <input type="text" id="editBrandNameInput" required class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1" for="editBrandAliasesInput">Brand Aliases (comma-separated)</label>
+          <input type="text" id="editBrandAliasesInput" placeholder="Northstar, Northstar Cloud, StarGuard" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <span class="text-[11px] text-slate-500 mt-0.5 block">Used for string similarity scans across candidate accounts.</span>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1" for="editBrandIndustryInput">Industry / Category</label>
+          <input type="text" id="editBrandIndustryInput" placeholder="Enterprise Cloud & Cybersecurity" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1" for="editBrandLogoUrlInput">Logo URL / Asset Path</label>
+          <input type="text" id="editBrandLogoUrlInput" placeholder="/static/img/northstar_star.svg" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 font-mono text-[11px] focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div class="flex items-center justify-end gap-2.5 pt-2 border-t border-slate-100">
+          <button type="button" onclick="closeEditBrandModal()" class="px-4 py-2 rounded-lg border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-sm">Save Brand Profile</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Add Brand -->
+  <div id="addBrandModal" class="fixed inset-0 z-50 modal-backdrop hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full border border-slate-200 card-shadow overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+        <div>
+          <h3 class="font-bold text-slate-900 text-base">Add Brand Profile</h3>
+          <p class="text-xs text-slate-500">Register a new brand identity for monitoring and verification</p>
+        </div>
+        <button onclick="closeAddBrandModal()" class="text-slate-400 hover:text-slate-700 p-1 rounded-md" aria-label="Close modal">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <form id="addBrandForm" onsubmit="handleCreateBrand(event)" class="p-5 space-y-4 text-xs">
+        <div id="addBrandFormError" class="p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 hidden leading-tight"></div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1" for="newBrandNameInput">Brand Name *</label>
+          <input type="text" id="newBrandNameInput" required placeholder="e.g. MG Indian Super League" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1" for="newBrandAliasesInput">Brand Aliases (comma separated)</label>
+          <input type="text" id="newBrandAliasesInput" placeholder="e.g. Indian Super League, ISL, MG ISL" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1" for="newBrandIndustryInput">Industry / Category</label>
+          <input type="text" id="newBrandIndustryInput" placeholder="e.g. Sports & Entertainment" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div class="flex items-center justify-end gap-2.5 pt-2 border-t border-slate-100">
+          <button type="button" onclick="closeAddBrandModal()" class="px-4 py-2 rounded-lg border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium">Cancel</button>
+          <button type="submit" id="submitAddBrandBtn" class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-sm">Create Brand</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: Add Official Asset -->
+  <div id="addAssetModal" class="fixed inset-0 z-50 modal-backdrop hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
+        <div>
+          <h3 class="font-bold text-slate-900 text-base" id="addAssetModalTitle">Register Official Asset</h3>
+          <p class="text-xs text-slate-500">Add verified channel, domain, or app package with exact stable ID</p>
+        </div>
+        <button onclick="closeAddAssetModal()" class="text-slate-400 hover:text-slate-700 p-1 rounded-md" aria-label="Close Modal">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <form id="addAssetForm" onsubmit="handleSaveOfficialAsset(event)" class="p-5 space-y-4 text-xs">
+        <div id="assetFormError" class="p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 hidden"></div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1" for="assetTypeSelect">Asset Classification</label>
+          <select id="assetTypeSelect" onchange="toggleAssetTypeFields()" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="domain">Official Domain (FQDN)</option>
+            <option value="social_account">Official Social Account / Channel</option>
+            <option value="mobile_app">Official Mobile Application</option>
+          </select>
+        </div>
+
+        <!-- Domain Fields -->
+        <div id="domainFieldsSection" class="space-y-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1" for="domainInput">Domain Name (FQDN) *</label>
+            <input type="text" id="domainInput" placeholder="northstar-tech.io" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <span class="text-[11px] text-slate-500 mt-0.5 block">Enter domain without http:// or trailing slashes (e.g. 'northstar.com').</span>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1" for="domainDisplayName">Display Label</label>
+            <input type="text" id="domainDisplayName" placeholder="Primary Production Gateway" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+        </div>
+
+        <!-- Social Fields -->
+        <div id="socialFieldsSection" class="space-y-3 hidden">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1" for="socialPlatformSelect">Social Platform *</label>
+              <select id="socialPlatformSelect" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 font-medium">
+                <option value="instagram">Instagram</option>
+                <option value="twitter_x">X (Twitter)</option>
+                <option value="tiktok">TikTok</option>
+                <option value="linkedin">LinkedIn</option>
+                <option value="facebook">Facebook</option>
+                <option value="youtube">YouTube</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1" for="socialHandleInput">Public Handle / Path *</label>
+              <input type="text" id="socialHandleInput" placeholder="@northstar_tech" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800">
+            </div>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1" for="socialStableIdInput">Exact Stable Account/Channel ID *</label>
+            <input type="text" id="socialStableIdInput" placeholder="ig_act_982348123 or platform numeric user ID" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 font-mono text-[11px]">
+            <span class="text-[11px] text-blue-700 bg-blue-50 p-1.5 rounded mt-1 block">
+              <strong>Security Requirement:</strong> Exact stable ID prevents spoofing. BrandSentinel never establishes official status from name or logo alone.
+            </span>
+          </div>
+        </div>
+
+        <!-- Mobile App Fields -->
+        <div id="appFieldsSection" class="space-y-3 hidden">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1" for="appStoreSelect">Application Store *</label>
+              <select id="appStoreSelect" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 font-medium">
+                <option value="google_play">Google Play Store</option>
+                <option value="apple_app_store">Apple App Store</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1" for="appPackageInput">Exact Package / App ID *</label>
+              <input type="text" id="appPackageInput" placeholder="com.northstar.mobile or 158932014" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 font-mono text-[11px]">
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1" for="appPublisherIdInput">Authorized Publisher ID</label>
+              <input type="text" id="appPublisherIdInput" placeholder="pub-northstar-official-9021" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 font-mono text-[11px]">
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1" for="appPublisherNameInput">Publisher Org Name</label>
+              <input type="text" id="appPublisherNameInput" placeholder="Northstar Technologies LLC" class="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800">
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2.5 pt-2 border-t border-slate-100">
+          <button type="button" onclick="closeAddAssetModal()" class="px-4 py-2 rounded-lg border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-sm">Save Official Asset</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Application Script -->
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
